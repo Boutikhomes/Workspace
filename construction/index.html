@@ -4,7 +4,559 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Construction Operations</title>
-    <link rel="stylesheet" href="styles.css" />
+    <style>
+:root {
+  --ink: #17202a;
+  --muted: #667085;
+  --line: #d8dee8;
+  --panel: #ffffff;
+  --page: #f4f7fa;
+  --nav: #12343b;
+  --teal: #177e89;
+  --green: #3f7d58;
+  --amber: #c77700;
+  --red: #b42318;
+  --blue: #2f5d9f;
+  --shadow: 0 12px 32px rgba(18, 52, 59, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background: var(--page);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button,
+select,
+textarea {
+  font: inherit;
+}
+
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 276px;
+  padding: 24px 18px;
+  background: var(--nav);
+  color: #eef7f8;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-mark {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: #e9c46a;
+  color: #12343b;
+  font-weight: 800;
+}
+
+.brand strong,
+.brand span {
+  display: block;
+}
+
+.brand span {
+  color: #b6ced2;
+  font-size: 0.82rem;
+}
+
+.nav {
+  display: grid;
+  gap: 6px;
+}
+
+.nav a {
+  color: #d9ebee;
+  padding: 12px 14px;
+  text-decoration: none;
+  border-left: 3px solid transparent;
+}
+
+.nav a.active,
+.nav a:hover {
+  border-color: #e9c46a;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sync-box {
+  margin-top: auto;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sync-box span,
+.sync-box strong {
+  display: block;
+}
+
+.sync-box span {
+  margin-bottom: 6px;
+  color: #b6ced2;
+  font-size: 0.82rem;
+}
+
+.app-shell {
+  margin-left: 276px;
+  padding: 28px;
+}
+
+.topbar,
+.section-head,
+.status-grid,
+.daily-layout,
+.forecast-grid,
+.inspection-grid,
+.plan-board {
+  display: grid;
+  gap: 16px;
+}
+
+.topbar {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.topbar h1,
+.section-head h2 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+.topbar h1 {
+  font-size: 2rem;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--teal);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.top-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.primary-button,
+.secondary-button,
+.icon-button,
+.segmented button {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  min-height: 40px;
+  cursor: pointer;
+}
+
+.primary-button {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: #fff;
+  padding: 0 16px;
+  font-weight: 750;
+}
+
+.secondary-button {
+  padding: 0 14px;
+}
+
+.icon-button {
+  width: 40px;
+  font-size: 1.1rem;
+}
+
+.status-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 18px;
+}
+
+.status-grid article,
+.workspace,
+.handoff-panel,
+.task-card,
+.plan-card,
+.inspection-card,
+.forecast-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.status-grid article {
+  padding: 18px;
+}
+
+.status-grid span,
+.status-grid small {
+  color: var(--muted);
+}
+
+.status-grid strong {
+  display: block;
+  margin: 8px 0 3px;
+  font-size: 1.9rem;
+}
+
+.workspace {
+  margin-top: 18px;
+  padding: 20px;
+}
+
+.section-head {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.section-head.compact {
+  margin-bottom: 8px;
+}
+
+.segmented {
+  display: flex;
+  border: 1px solid var(--line);
+  background: #f8fafc;
+}
+
+.segmented button {
+  border: 0;
+  border-right: 1px solid var(--line);
+  padding: 0 12px;
+  background: transparent;
+}
+
+.segmented button:last-child {
+  border-right: 0;
+}
+
+.segmented .active {
+  background: var(--teal);
+  color: #fff;
+}
+
+.plan-board {
+  grid-template-columns: repeat(3, minmax(260px, 1fr));
+}
+
+.plan-card,
+.task-card,
+.inspection-card,
+.forecast-card {
+  padding: 16px;
+}
+
+.plan-title,
+.task-title,
+.inspection-title,
+.forecast-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  background: #f8fafc;
+  color: var(--muted);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.badge.green {
+  border-color: rgba(63, 125, 88, 0.3);
+  background: #edf7f1;
+  color: var(--green);
+}
+
+.badge.amber {
+  border-color: rgba(199, 119, 0, 0.3);
+  background: #fff5df;
+  color: var(--amber);
+}
+
+.badge.red {
+  border-color: rgba(180, 35, 24, 0.25);
+  background: #fff0ef;
+  color: var(--red);
+}
+
+.timeline {
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.timeline-row {
+  display: grid;
+  grid-template-columns: 96px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.bar {
+  height: 8px;
+  background: #e8edf3;
+  overflow: hidden;
+}
+
+.bar span {
+  display: block;
+  height: 100%;
+  background: var(--blue);
+}
+
+.daily-layout {
+  grid-template-columns: 1.8fr 1fr;
+}
+
+.task-list {
+  display: grid;
+  gap: 12px;
+}
+
+.task-card {
+  display: grid;
+  gap: 10px;
+}
+
+.task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.handoff-panel {
+  padding: 16px;
+  align-self: start;
+}
+
+.handoff-panel h3 {
+  margin: 0 0 14px;
+}
+
+.handoff-item {
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+}
+
+.handoff-item span {
+  color: var(--teal);
+  font-weight: 800;
+}
+
+.handoff-item p,
+.task-card p,
+.inspection-card p,
+.plan-card p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 780px;
+}
+
+th,
+td {
+  border-bottom: 1px solid var(--line);
+  padding: 13px 10px;
+  text-align: left;
+}
+
+th {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.inspection-grid {
+  grid-template-columns: repeat(3, minmax(240px, 1fr));
+}
+
+.plot-visual {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 14px 0;
+  padding: 10px;
+  background: #edf2f4;
+  border: 1px solid var(--line);
+}
+
+.plot-visual span {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  border: 1px solid #cfd8e3;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.checklist {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.checklist label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--muted);
+}
+
+.forecast-grid {
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+}
+
+.forecast-card strong {
+  display: block;
+  margin: 8px 0;
+  font-size: 1.5rem;
+}
+
+.forecast-card progress {
+  width: 100%;
+  height: 12px;
+  accent-color: var(--green);
+}
+
+dialog {
+  width: min(540px, calc(100% - 32px));
+  border: 1px solid var(--line);
+  box-shadow: 0 24px 60px rgba(18, 52, 59, 0.22);
+}
+
+dialog::backdrop {
+  background: rgba(23, 32, 42, 0.36);
+}
+
+.request-form {
+  display: grid;
+  gap: 14px;
+}
+
+.request-form label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+select,
+textarea {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  min-height: 40px;
+  padding: 8px 10px;
+}
+
+textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+@media (max-width: 1080px) {
+  .sidebar {
+    position: static;
+    width: auto;
+    min-height: auto;
+  }
+
+  .app-shell {
+    margin-left: 0;
+    padding: 18px;
+  }
+
+  .nav {
+    grid-template-columns: repeat(5, minmax(130px, 1fr));
+    overflow-x: auto;
+  }
+
+  .sync-box {
+    margin-top: 0;
+  }
+
+  .status-grid,
+  .daily-layout,
+  .inspection-grid,
+  .forecast-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .topbar,
+  .section-head,
+  .status-grid,
+  .daily-layout,
+  .inspection-grid,
+  .forecast-grid,
+  .plan-board {
+    grid-template-columns: 1fr;
+  }
+
+  .top-actions,
+  .segmented {
+    width: 100%;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+  }
+
+  .segmented {
+    overflow-x: auto;
+  }
+
+  .timeline-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+</style>
   </head>
   <body>
     <aside class="sidebar">
@@ -203,6 +755,289 @@
       </form>
     </dialog>
 
-    <script src="script.js"></script>
+    <script>
+const projects = [
+  {
+    id: "north",
+    name: "โครงการเหนือ",
+    status: "ตรงแผน",
+    statusClass: "green",
+    note: "โฟกัสงานถนนเมนและบ้านเฟส 1 เพื่อรองรับการโอนจากฝ่ายขาย",
+    rows: [
+      ["ถนน", 72, "10 มิ.ย."],
+      ["เสาไฟฟ้า", 58, "18 มิ.ย."],
+      ["ประปา", 66, "20 มิ.ย."],
+      ["ทางเท้า", 41, "28 มิ.ย."],
+      ["บ้าน", 63, "30 มิ.ย."],
+    ],
+  },
+  {
+    id: "east",
+    name: "โครงการตะวันออก",
+    status: "ขอเร่ง",
+    statusClass: "amber",
+    note: "งานบ้านล็อต B เร็วกว่ากำหนด ต้องขอปรับวันเรียกวัสดุและทีมตรวจงาน",
+    rows: [
+      ["ถนน", 86, "05 มิ.ย."],
+      ["เสาไฟฟ้า", 76, "12 มิ.ย."],
+      ["ประปา", 69, "17 มิ.ย."],
+      ["ทางเท้า", 52, "24 มิ.ย."],
+      ["บ้าน", 78, "25 มิ.ย."],
+    ],
+  },
+  {
+    id: "west",
+    name: "โครงการตะวันตก",
+    status: "เสี่ยงล่าช้า",
+    statusClass: "red",
+    note: "งานสาธารณูปโภคติดฝนและรอวัสดุท่อประปา ต้อง request เลื่อนบางงวด",
+    rows: [
+      ["ถนน", 45, "16 มิ.ย."],
+      ["เสาไฟฟ้า", 54, "21 มิ.ย."],
+      ["ประปา", 38, "29 มิ.ย."],
+      ["ทางเท้า", 28, "04 ก.ค."],
+      ["บ้าน", 47, "07 ก.ค."],
+    ],
+  },
+];
+
+const tasks = [
+  {
+    source: "sales",
+    sourceLabel: "ฝ่ายขาย",
+    title: "เตรียมบ้าน B-18 ก่อนโอนกรรมสิทธิ์",
+    detail: "ลูกค้าอยู่ขั้นตอนนัดธนาคาร คาดโอน 12 มิ.ย. 2026 ให้ตรวจ defect และทำความสะอาดบ้าน",
+    project: "โครงการตะวันออก",
+    priority: "ด่วน",
+    badgeClass: "amber",
+  },
+  {
+    source: "afterSales",
+    sourceLabel: "หลังการขาย",
+    title: "เข้าตรวจงานรั่วซึมบ้าน A-07",
+    detail: "ลูกค้าแจ้งซ่อมหลังฝนตก ให้ทีมช่างเข้าตรวจและอัปเดตรูปใน Drive รายแปลง",
+    project: "โครงการเหนือ",
+    priority: "วันนี้",
+    badgeClass: "red",
+  },
+  {
+    source: "marketing",
+    sourceLabel: "การตลาด",
+    title: "เตรียมพื้นที่ถ่ายทำคอนเทนต์",
+    detail: "เคลียร์พื้นที่สวนส่วนกลาง ติดไฟชั่วคราว และกั้นแนวปลอดภัยก่อนทีมถ่ายทำเข้า",
+    project: "โครงการเหนือ",
+    priority: "พรุ่งนี้",
+    badgeClass: "green",
+  },
+  {
+    source: "ceo",
+    sourceLabel: "CEO",
+    title: "ตรวจความเรียบร้อยถนนทางเข้า",
+    detail: "เพิ่มเป็นงานทั่วไปเพื่อเตรียมรับผู้บริหารและคู่ค้าเยี่ยมชมไซต์",
+    project: "โครงการตะวันตก",
+    priority: "สัปดาห์นี้",
+    badgeClass: "amber",
+  },
+];
+
+const materials = [
+  ["โครงการเหนือ", "ถนน", "คอนกรีตผสมเสร็จ 240 ksc", "03 มิ.ย. 2026", "ก่อนเทถนนเมน 7 วัน", "รออนุมัติ"],
+  ["โครงการเหนือ", "เสาไฟฟ้า", "เสาไฟ 8 เมตร / ตู้ MDB", "06 มิ.ย. 2026", "ก่อนเดินระบบไฟ 10 วัน", "เรียกแล้ว"],
+  ["โครงการตะวันออก", "บ้าน", "กระเบื้องพื้นล็อต B", "08 มิ.ย. 2026", "ก่อนปูกระเบื้อง 5 วัน", "ต้องเร่ง"],
+  ["โครงการตะวันตก", "ประปา", "ท่อ HDPE และวาล์ว", "12 มิ.ย. 2026", "ก่อนวางระบบประปา 14 วัน", "ขาดเอกสาร"],
+  ["โครงการตะวันตก", "ทางเท้า", "บล็อกปูพื้น", "20 มิ.ย. 2026", "หลังงานประปาผ่านตรวจ", "ตามแผน"],
+];
+
+const inspections = [
+  {
+    plot: "A-07",
+    drive: "Drive / โครงการเหนือ / A-07 / แจ้งซ่อม",
+    jobs: [
+      ["โครงสร้าง", true],
+      ["หลังคา", false],
+      ["สุขาภิบาล", true],
+    ],
+  },
+  {
+    plot: "B-18",
+    drive: "Drive / โครงการตะวันออก / B-18 / ก่อนโอน",
+    jobs: [
+      ["สีและเก็บงาน", true],
+      ["ไฟฟ้า", true],
+      ["พื้น", false],
+    ],
+  },
+  {
+    plot: "C-14",
+    drive: "Drive / โครงการตะวันตก / C-14 / ประกันปี",
+    jobs: [
+      ["ประตูหน้าต่าง", false],
+      ["งานสวน", true],
+      ["งานรั้ว", true],
+    ],
+  },
+];
+
+const forecasts = [
+  ["มิ.ย.", "฿4.8M", 72, "งานถนน บ้านล็อต B และประปา"],
+  ["ก.ค.", "฿5.6M", 64, "งานโครงสร้าง บ้านเฟส 2"],
+  ["ส.ค.", "฿3.9M", 48, "ทางเท้า งานไฟฟ้า และเก็บ defect"],
+  ["ก.ย.", "฿4.2M", 55, "จ่ายงวดผู้รับเหมาหลักและงานส่วนกลาง"],
+];
+
+const planBoard = document.querySelector("#planBoard");
+const taskList = document.querySelector("#taskList");
+const materialRows = document.querySelector("#materialRows");
+const inspectionGrid = document.querySelector("#inspectionGrid");
+const forecastGrid = document.querySelector("#forecastGrid");
+const sourceFilter = document.querySelector("#sourceFilter");
+const requestDialog = document.querySelector("#requestDialog");
+
+function renderPlans(filter = "all") {
+  planBoard.innerHTML = projects
+    .filter((project) => filter === "all" || project.id === filter)
+    .map(
+      (project) => `
+        <article class="plan-card">
+          <div class="plan-title">
+            <div>
+              <h3>${project.name}</h3>
+              <p>${project.note}</p>
+            </div>
+            <span class="badge ${project.statusClass}">${project.status}</span>
+          </div>
+          <div class="timeline">
+            ${project.rows
+              .map(
+                ([label, percent, due]) => `
+                  <div class="timeline-row">
+                    <span>${label}</span>
+                    <div class="bar" aria-label="${label} ${percent}%"><span style="width:${percent}%"></span></div>
+                    <strong>${due}</strong>
+                  </div>
+                `,
+              )
+              .join("")}
+          </div>
+        </article>
+      `,
+    )
+    .join("");
+}
+
+function renderTasks(filter = "all") {
+  taskList.innerHTML = tasks
+    .filter((task) => filter === "all" || task.source === filter)
+    .map(
+      (task) => `
+        <article class="task-card">
+          <div class="task-title">
+            <div>
+              <h3>${task.title}</h3>
+              <p>${task.detail}</p>
+            </div>
+            <span class="badge ${task.badgeClass}">${task.priority}</span>
+          </div>
+          <div class="task-meta">
+            <span class="badge">${task.sourceLabel}</span>
+            <span class="badge">${task.project}</span>
+          </div>
+        </article>
+      `,
+    )
+    .join("");
+}
+
+function renderMaterials() {
+  materialRows.innerHTML = materials
+    .map(
+      ([project, category, item, date, link, status]) => `
+        <tr>
+          <td>${project}</td>
+          <td>${category}</td>
+          <td>${item}</td>
+          <td>${date}</td>
+          <td>${link}</td>
+          <td><span class="badge">${status}</span></td>
+        </tr>
+      `,
+    )
+    .join("");
+}
+
+function renderInspections() {
+  inspectionGrid.innerHTML = inspections
+    .map(
+      (inspection) => `
+        <article class="inspection-card">
+          <div class="inspection-title">
+            <div>
+              <h3>แปลง ${inspection.plot}</h3>
+              <p>${inspection.drive}</p>
+            </div>
+            <span class="badge">Google Drive</span>
+          </div>
+          <div class="plot-visual" aria-label="รูปตัวอย่างรายแปลง ${inspection.plot}">
+            <span>หน้า</span><span>หลัง</span><span>ซ้าย</span><span>ขวา</span>
+          </div>
+          <div class="checklist">
+            ${inspection.jobs
+              .map(
+                ([job, checked]) => `
+                  <label>
+                    <input type="checkbox" ${checked ? "checked" : ""} />
+                    ${job} ${checked ? "ผ่าน" : "ไม่ผ่าน ต้องแก้ไข"}
+                  </label>
+                `,
+              )
+              .join("")}
+          </div>
+        </article>
+      `,
+    )
+    .join("");
+}
+
+function renderForecasts() {
+  forecastGrid.innerHTML = forecasts
+    .map(
+      ([month, amount, progress, detail]) => `
+        <article class="forecast-card">
+          <div class="forecast-title">
+            <h3>${month}</h3>
+            <span class="badge">${progress}%</span>
+          </div>
+          <strong>${amount}</strong>
+          <progress value="${progress}" max="100"></progress>
+          <p>${detail}</p>
+        </article>
+      `,
+    )
+    .join("");
+}
+
+document.querySelectorAll("[data-project-filter]").forEach((button) => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll("[data-project-filter]").forEach((item) => item.classList.remove("active"));
+    button.classList.add("active");
+    renderPlans(button.dataset.projectFilter);
+  });
+});
+
+sourceFilter.addEventListener("change", (event) => {
+  renderTasks(event.target.value);
+});
+
+document.querySelector("#openRequest").addEventListener("click", () => {
+  requestDialog.showModal();
+});
+
+renderPlans();
+renderTasks();
+renderMaterials();
+renderInspections();
+renderForecasts();
+
+</script>
   </body>
 </html>
