@@ -476,10 +476,9 @@
           <p class="lead">โชว์เฉพาะภาพรวมที่ทีมขายต้องเห็นก่อน: ผังโครงการ, เป้าที่ยังขาด, และลูกค้าที่ต้องโทรคอนเฟิร์มนัดในสัปดาห์นี้</p>
         </div>
         <div class="api-box">
-          <label for="apiUrl">Google Sheet API URL</label>
-          <input id="apiUrl" type="url" placeholder="วาง Apps Script Web App URL">
-          <button class="primary" type="button" onclick="connectApi()">เชื่อม Google Sheet</button>
-          <div class="api-status" id="apiStatus">ยังใช้ข้อมูลทดลองใน browser</div>
+          <label>Google Sheet</label>
+          <button class="primary" type="button" onclick="syncFromApi()">Sync ข้อมูลล่าสุด</button>
+          <div class="api-status" id="apiStatus">กำลังเตรียมเชื่อม Google Sheet</div>
         </div>
       </div>
 
@@ -738,7 +737,7 @@
     const PIN_KEY = 'boutikSalesMapPins';
     const LEAD_KEY = 'boutikSalesLeads';
     const WALKIN_KEY = 'boutikSalesWalkins';
-    const API_URL_KEY = 'boutikSalesApiUrl';
+    const SALES_API_URL = 'https://script.google.com/macros/s/AKfycbzcD4DlhV1N3SGQ-XyW_HGlyk88X_nEGy9t_Ca-o-rFgbuNILfTOiHhmBAUODOFfrg/exec';
 
     let target = { reservedGoal: 13, transferredGoal: 11, reservedDone: 8, transferredDone: 5 };
     const defaultLeads = [
@@ -772,7 +771,7 @@
     let selectedPinId = pins.length ? pins[pins.length - 1].id : null;
     let selectedLeadId = leads.length ? leads[0].id : null;
     let selectedWalkinId = walkins.length ? walkins[0].id : null;
-    let apiUrl = localStorage.getItem(API_URL_KEY) || '';
+    let apiUrl = SALES_API_URL;
 
     const statusLabels = {
       available: 'แปลงว่าง',
@@ -785,11 +784,9 @@
     const mapEmpty = document.getElementById('mapEmpty');
     const plotCode = document.getElementById('plotCode');
     const plotStatus = document.getElementById('plotStatus');
-    const apiUrlInput = document.getElementById('apiUrl');
     const apiStatus = document.getElementById('apiStatus');
 
-    apiUrlInput.value = apiUrl;
-    setApiStatus(apiUrl ? 'พร้อมเชื่อม Google Sheet กดปุ่มเพื่อ sync' : 'ยังใช้ข้อมูลทดลองใน browser', apiUrl ? 'ok' : '');
+    setApiStatus('กำลังเชื่อม Google Sheet อัตโนมัติ...', '');
 
     document.getElementById('mapUpload').addEventListener('change', event => {
       const file = event.target.files[0];
@@ -1138,17 +1135,6 @@
       renderAll();
     }
 
-    async function connectApi() {
-      apiUrl = apiUrlInput.value.trim();
-      if (!apiUrl) {
-        localStorage.removeItem(API_URL_KEY);
-        setApiStatus('ยังใช้ข้อมูลทดลองใน browser', '');
-        return;
-      }
-      localStorage.setItem(API_URL_KEY, apiUrl);
-      await syncFromApi();
-    }
-
     async function syncFromApi() {
       if (!apiUrl) return;
       try {
@@ -1298,7 +1284,7 @@
 
     const initialView = location.hash.replace('#', '') || 'dashboard';
     showView(['dashboard', 'leads', 'walkins'].includes(initialView) ? initialView : 'dashboard');
-    if (apiUrl) syncFromApi();
+    syncFromApi();
   </script>
 </body>
 </html>
