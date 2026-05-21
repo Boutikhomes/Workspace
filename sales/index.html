@@ -462,7 +462,8 @@
         <a class="btn" href="../">Workspace</a>
         <button class="active" type="button" data-view-button="dashboard" onclick="showView('dashboard')">หน้าขาย</button>
         <button type="button" data-view-button="leads" onclick="showView('leads')">Lead</button>
-        <button type="button" data-view-button="walkins" onclick="showView('walkins')">Walk-in</button>
+        <button type="button" data-view-button="walkins" onclick="showView('walkins')">รายการ Walk-in</button>
+        <button type="button" data-view-button="add-walkin" onclick="showView('add-walkin')">เพิ่ม Walk-in</button>
       </nav>
     </div>
   </header>
@@ -616,8 +617,55 @@
       <div class="page-head">
         <div>
           <div class="eyebrow">Walk-in Management</div>
-          <h1>บันทึกลูกค้า Walk-in</h1>
-          <p class="lead">ใช้ได้ทั้งลูกค้า Walk-in ที่เปลี่ยนมาจาก Lead และลูกค้าที่เดินเข้ามาเองโดยไม่ได้มาจาก Lead</p>
+          <h1>รายการ Walk-in</h1>
+          <p class="lead">ดูรายการลูกค้า Walk-in และเพิ่ม Follow up หลังติดตามลูกค้า</p>
+        </div>
+        <button class="primary" type="button" onclick="openAddWalkin()">เพิ่ม Walk-in</button>
+      </div>
+
+      <div class="split-grid">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>รายการ Walk-in</h2>
+              <div class="section-note">คลิกเลือกลูกค้าเพื่อเพิ่ม Follow up</div>
+            </div>
+          </div>
+          <div class="table-shell">
+            <table>
+              <thead>
+                <tr>
+                  <th>เวลาเข้า</th>
+                  <th>ลูกค้า</th>
+                  <th>โครงการ</th>
+                  <th>Source</th>
+                  <th>ติดตามกลับ</th>
+                  <th>สถานะ</th>
+                </tr>
+              </thead>
+              <tbody id="walkinRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <aside class="panel">
+          <div class="panel-head">
+            <div>
+              <h2 id="walkinDetailTitle">เลือก Walk-in</h2>
+              <div class="section-note">เพิ่มบันทึกหลัง Follow up ทุกครั้ง</div>
+            </div>
+          </div>
+          <div id="walkinDetail" class="empty">คลิกเลือกลูกค้าจากตาราง Walk-in</div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="view hidden" id="view-add-walkin">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Walk-in Form</div>
+          <h1>เพิ่ม Walk-in</h1>
+          <p class="lead">บันทึกลูกค้า Walk-in ที่เปลี่ยนมาจาก Lead หรือเดินเข้ามาเองโดยไม่ได้มาจาก Lead</p>
         </div>
       </div>
 
@@ -694,42 +742,6 @@
           <button class="primary" type="submit">บันทึก Walk-in</button>
         </div>
       </form>
-
-      <div class="split-grid" style="margin-top: 14px;">
-        <section class="panel">
-          <div class="panel-head">
-            <div>
-              <h2>รายการ Walk-in</h2>
-              <div class="section-note">คลิกเลือกลูกค้าเพื่อเพิ่ม Follow up</div>
-            </div>
-          </div>
-          <div class="table-shell">
-            <table>
-              <thead>
-                <tr>
-                  <th>เวลาเข้า</th>
-                  <th>ลูกค้า</th>
-                  <th>โครงการ</th>
-                  <th>Source</th>
-                  <th>ติดตามกลับ</th>
-                  <th>สถานะ</th>
-                </tr>
-              </thead>
-              <tbody id="walkinRows"></tbody>
-            </table>
-          </div>
-        </section>
-
-        <aside class="panel">
-          <div class="panel-head">
-            <div>
-              <h2 id="walkinDetailTitle">เลือก Walk-in</h2>
-              <div class="section-note">เพิ่มบันทึกหลัง Follow up ทุกครั้ง</div>
-            </div>
-          </div>
-          <div id="walkinDetail" class="empty">คลิกเลือกลูกค้าจากตาราง Walk-in</div>
-        </aside>
-      </div>
     </section>
   </main>
 
@@ -985,7 +997,7 @@
     function convertLeadToWalkin() {
       const lead = leads.find(item => String(item.id) === String(selectedLeadId));
       if (!lead) return;
-      showView('walkins');
+      showView('add-walkin');
       clearWalkinForm();
       document.getElementById('walkinFormTitle').innerText = `เปลี่ยน Lead เป็น Walk-in: ${lead.name}`;
       document.getElementById('walkinSourceLeadId').value = lead.id;
@@ -994,6 +1006,11 @@
       document.getElementById('source').value = lead.channel === 'Facebook' ? 'Lead จาก Facebook' : lead.channel === 'Line' ? 'Lead จาก Line' : (lead.source || '');
       document.getElementById('nextFollowDate').value = lead.followDate || '';
       document.getElementById('extraDetail').value = `แปลงมาจาก Lead: ${lead.interest || ''}`;
+    }
+
+    function openAddWalkin() {
+      showView('add-walkin');
+      clearWalkinForm();
     }
 
     async function saveWalkin(event) {
@@ -1048,6 +1065,7 @@
       }
       save(WALKIN_KEY, walkins);
       clearWalkinForm();
+      showView('walkins');
       renderAll();
     }
 
@@ -1283,7 +1301,7 @@
     }
 
     const initialView = location.hash.replace('#', '') || 'dashboard';
-    showView(['dashboard', 'leads', 'walkins'].includes(initialView) ? initialView : 'dashboard');
+    showView(['dashboard', 'leads', 'walkins', 'add-walkin'].includes(initialView) ? initialView : 'dashboard');
     syncFromApi();
   </script>
 </body>
