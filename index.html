@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Boutikhomes Workspace</title>
+  <meta name="description" content="ศูนย์กลางระบบงาน Boutikhomes สำหรับเลือกโครงการและฝ่าย">
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --panel: #ffffff;
+      --panel-soft: #f8fafc;
+      --ink: #1f2937;
+      --muted: #667085;
+      --line: #d9e0e8;
+      --brand: #184e77;
+      --brand-deep: #0f3553;
+      --sale: #0f766e;
+      --marketing: #b45309;
+      --management: #6d28d9;
+      --service: #be123c;
+      --danger: #b91c1c;
+      --shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(24, 78, 119, 0.08), rgba(244, 246, 248, 0) 360px),
+        var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Thai", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    a { color: inherit; }
+
+    .hidden { display: none !important; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      border-radius: 8px;
+      padding: 10px 14px;
+      text-decoration: none;
+      font-weight: 800;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--brand);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 15px;
+    }
+
+    .btn.primary {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .login-page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .login-shell {
+      width: 100%;
+      max-width: 430px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: var(--brand);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 20px;
+    }
+
+    .brand-lockup strong {
+      display: block;
+      color: var(--brand-deep);
+      font-size: 18px;
+    }
+
+    .brand-lockup span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.18;
+      color: var(--brand-deep);
+      letter-spacing: 0;
+    }
+
+    .login-copy {
+      color: var(--muted);
+      line-height: 1.65;
+      margin: 10px 0 22px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 12px;
+    }
+
+    label {
+      font-weight: 800;
+      color: var(--brand-deep);
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      min-height: 44px;
+      padding: 10px 12px;
+      font-size: 15px;
+      font-family: inherit;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(24, 78, 119, 0.12);
+    }
+
+    .login-actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .auth-status {
+      min-height: 22px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+      margin-top: 12px;
+    }
+
+    .auth-error {
+      color: var(--danger);
+      font-weight: 800;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .topbar .brand-lockup {
+      margin-bottom: 0;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .top-actions a,
+    .top-actions button {
+      text-decoration: none;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--brand);
+      border-radius: 8px;
+      padding: 8px 11px;
+      font-size: 14px;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 18px 48px;
+    }
+
+    .welcome {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      color: var(--brand);
+      font-weight: 900;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .lead {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 760px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 26px 0 12px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 22px;
+      color: var(--brand-deep);
+    }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .project-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+      text-decoration: none;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+      border-color: #b7c5d4;
+    }
+
+    .project-image {
+      aspect-ratio: 16 / 10;
+      background:
+        linear-gradient(135deg, rgba(24,78,119,0.18), rgba(255,255,255,0) 48%),
+        #dce6ef;
+      display: grid;
+      place-items: center;
+      color: var(--brand);
+      font-weight: 900;
+      font-size: 14px;
+      text-align: center;
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .project-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .project-body {
+      padding: 16px;
+    }
+
+    .project-body h3 {
+      margin: 0;
+      font-size: 18px;
+      color: var(--ink);
+    }
+
+    .project-body p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .department-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .dept {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      min-height: 210px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    }
+
+    .dept:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+      border-color: #b7c5d4;
+    }
+
+    .dept-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      margin-bottom: 14px;
+      font-weight: 900;
+    }
+
+    .dept h3 {
+      margin: 0;
+      font-size: 19px;
+      color: var(--ink);
+    }
+
+    .dept p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .dept-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 18px;
+      color: var(--brand);
+      font-weight: 900;
+      font-size: 14px;
+    }
+
+    .sale { background: var(--sale); }
+    .marketing { background: var(--marketing); }
+    .management { background: var(--management); }
+    .service { background: var(--service); }
+
+    .permission-item.permission-hidden {
+      display: none;
+    }
+
+    .permission-empty {
+      border: 1px dashed #cbd5e1;
+      color: var(--muted);
+      background: var(--panel-soft);
+      border-radius: 8px;
+      padding: 18px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .admin-only.hidden,
+    .project-permission-item.project-hidden {
+      display: none;
+    }
+
+    .admin-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+      padding: 18px;
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin: 8px 0 14px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 10px;
+      background: #fff;
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .check-item input {
+      width: auto;
+      min-height: auto;
+      box-shadow: none;
+    }
+
+    .user-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .user-row {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 11px;
+      background: var(--panel-soft);
+      display: grid;
+      gap: 7px;
+    }
+
+    .user-row-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .user-row strong {
+      color: var(--brand-deep);
+    }
+
+    .user-meta {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn.small {
+      min-height: 32px;
+      padding: 6px 10px;
+      font-size: 13px;
+    }
+
+    .link-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .quick-link {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      text-decoration: none;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+      font-weight: 900;
+      color: var(--brand);
+    }
+
+    .quick-link span {
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    @media (max-width: 960px) {
+      .project-grid,
+      .department-grid,
+      .link-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-inner,
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      h1 { font-size: 27px; }
+
+      .project-grid,
+      .department-grid,
+      .link-list,
+      .admin-grid,
+      .field-grid,
+      .checkbox-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="login-page" id="loginPage">
+    <div class="login-shell">
+      <div class="brand-lockup">
+        <div class="brand-mark">B</div>
+        <div>
+          <strong>Boutikhomes Workspace</strong>
+          <span>Secure portal entry</span>
+        </div>
+      </div>
+
+      <h1>เข้าสู่ระบบ</h1>
+      <p class="login-copy">กรอก Username และ Password รายบุคคลก่อนเข้าระบบ หลังจากเข้าสู่ระบบแล้วจะเลือกโครงการและเห็นเฉพาะฝ่ายที่มีสิทธิ์</p>
+
+      <form onsubmit="loginPortal(event)">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input id="username" type="text" autocomplete="username" placeholder="เช่น nitta">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password" placeholder="กรอกรหัสผ่าน">
+        </div>
+        <div class="login-actions">
+          <button class="btn primary" type="submit">เข้าสู่ระบบ</button>
+        </div>
+        <div class="auth-status" id="authStatus">ระบบจะแสดงเฉพาะโครงการและฝ่ายที่ผู้ใช้นั้นมีสิทธิ์เห็น</div>
+      </form>
+    </div>
+  </section>
+
+  <section class="app-page hidden" id="appPage">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand-lockup">
+          <div class="brand-mark">B</div>
+          <div>
+            <strong>Boutikhomes Workspace</strong>
+            <span id="userStatus">เข้าสู่ระบบแล้ว</span>
+          </div>
+        </div>
+        <nav class="top-actions" aria-label="Quick navigation">
+          <a href="#projects">เลือกโครงการ</a>
+          <a href="#departments">เลือกฝ่าย</a>
+          <a class="admin-only hidden" href="#adminPanel">จัดการ Permission</a>
+          <button type="button" onclick="logoutPortal()">ออกจากระบบ</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="welcome">
+        <div class="eyebrow">Central Dashboard</div>
+        <h1>ศูนย์กลางระบบงาน Boutikhomes</h1>
+        <p class="lead">เลือกโครงการก่อน แล้วเลือกฝ่ายหรือระบบที่ต้องการเข้าใช้งาน รายการที่แสดงด้านล่างถูกกรองตามสิทธิ์ของผู้ใช้ที่ login อยู่</p>
+      </section>
+
+      <section id="projects">
+        <div class="section-head">
+          <h2>เลือกโครงการ</h2>
+          <div class="section-note">เพิ่มรูปจริงได้โดยแทนที่ช่องรูปในแต่ละการ์ด</div>
+        </div>
+
+        <div class="project-grid">
+          <a class="project-card project-permission-item" data-project="valley" href="#departments" onclick="selectProject('valley')">
+            <div class="project-image">
+              <!-- ใส่รูปจริงแทนได้ เช่น <img src="images/verzo-valley-rama2.jpg" alt="โครงการเวอร์โซ่ วัลเลย์ พระราม 2"> -->
+              ช่องรูปโครงการ
+            </div>
+            <div class="project-body">
+              <h3>โครงการเวอร์โซ่ วัลเลย์ พระราม 2</h3>
+              <p>เลือกเพื่อเข้าสู่ระบบงานของโครงการ Verzo Valley Rama 2</p>
+            </div>
+          </a>
+
+          <a class="project-card project-permission-item" data-project="samaedam" href="#departments" onclick="selectProject('samaedam')">
+            <div class="project-image">
+              <!-- ใส่รูปจริงแทนได้ เช่น <img src="images/verzo-samaedam.jpg" alt="โครงการเวอร์โซ่ แสมดำ"> -->
+              ช่องรูปโครงการ
+            </div>
+            <div class="project-body">
+              <h3>โครงการเวอร์โซ่ แสมดำ</h3>
+              <p>เลือกเพื่อเข้าสู่ระบบงานของโครงการ Verzo Samaedam</p>
+            </div>
+          </a>
+
+          <a class="project-card project-permission-item" data-project="viaste" href="#departments" onclick="selectProject('viaste')">
+            <div class="project-image">
+              <!-- ใส่รูปจริงแทนได้ เช่น <img src="images/viaste-rama2.jpg" alt="โครงการเวียสเต้ พระราม 2"> -->
+              ช่องรูปโครงการ
+            </div>
+            <div class="project-body">
+              <h3>โครงการเวียสเต้ พระราม 2</h3>
+              <p>เลือกเพื่อเข้าสู่ระบบงานของโครงการ Viaste Rama 2</p>
+            </div>
+          </a>
+        </div>
+        <div class="permission-empty hidden" id="projectEmpty">ผู้ใช้นี้ยังไม่มีสิทธิ์เห็นโครงการใด</div>
+      </section>
+
+      <section id="departments">
+        <div class="section-head">
+          <h2>เลือกฝ่าย</h2>
+          <div class="section-note" id="selectedProjectLabel">ยังไม่ได้เลือกโครงการ</div>
+        </div>
+
+        <div class="department-grid">
+          <a class="dept permission-item" data-permission="sales" href="#sales">
+            <div>
+              <div class="dept-icon sale">S</div>
+              <h3>ฝ่ายขาย</h3>
+              <p>ระบบติดตาม Lead, Walk-in, Follow up และงานประจำวันของทีมขาย</p>
+            </div>
+            <div class="dept-footer">เข้าสู่ฝ่ายขาย <span>→</span></div>
+          </a>
+
+          <a class="dept permission-item" data-permission="marketing" href="#marketing">
+            <div>
+              <div class="dept-icon marketing">M</div>
+              <h3>ฝ่ายการตลาด</h3>
+              <p>เพิ่ม Lead, ตรวจ campaign source, ดูข้อมูลรายสัปดาห์ และแผนการตลาด</p>
+            </div>
+            <div class="dept-footer">เข้าสู่การตลาด <span>→</span></div>
+          </a>
+
+          <a class="dept permission-item" data-permission="management" href="#management">
+            <div>
+              <div class="dept-icon management">A</div>
+              <h3>ผู้บริหาร</h3>
+              <p>ดูภาพรวม performance, อนุมัติรายการสำคัญ และจัดการ permission</p>
+            </div>
+            <div class="dept-footer">เข้าสู่ผู้บริหาร <span>→</span></div>
+          </a>
+
+          <a class="dept permission-item" data-permission="service" href="#service">
+            <div>
+              <div class="dept-icon service">C</div>
+              <h3>ลูกค้า / CS</h3>
+              <p>พื้นที่สำหรับเอกสารลูกบ้าน, นัดหมาย, แจ้งซ่อม หรือบริการหลังการขาย</p>
+            </div>
+            <div class="dept-footer">เข้าสู่ CS <span>→</span></div>
+          </a>
+        </div>
+        <div class="permission-empty hidden" id="departmentEmpty">ผู้ใช้นี้ยังไม่มีสิทธิ์เห็นฝ่ายใด</div>
+      </section>
+
+      <section id="links">
+        <div class="section-head">
+          <h2>ลิงก์ระบบ</h2>
+          <div class="section-note">ลิงก์จะถูกกรองตามสิทธิ์ของผู้ใช้</div>
+        </div>
+        <div class="link-list">
+          <a class="quick-link permission-item" data-permission="sales" href="#sales">Sales CRM <span>รอใส่ URL</span></a>
+          <a class="quick-link permission-item" data-permission="marketing" href="#marketing">Marketing Plan <span>รอใส่ URL</span></a>
+          <a class="quick-link permission-item" data-permission="management" href="#management">Permission Admin <span>รอใส่ URL</span></a>
+          <a class="quick-link" href="README.md">Setup Guide <span>README</span></a>
+        </div>
+      </section>
+
+      <section class="admin-only hidden" id="adminPanel">
+        <div class="section-head">
+          <h2>จัดการ Permission</h2>
+          <div class="section-note">เพิ่ม/แก้ไข User พร้อมกำหนดสิทธิ์ฝ่ายและโครงการ</div>
+        </div>
+
+        <div class="admin-grid">
+          <div class="admin-panel">
+            <h2>ข้อมูล User</h2>
+            <form onsubmit="saveUserFromAdmin(event)">
+              <div class="field-grid">
+                <div class="form-group">
+                  <label for="adminUsername">Username</label>
+                  <input id="adminUsername" type="text" placeholder="เช่น nitta">
+                </div>
+                <div class="form-group">
+                  <label for="adminPassword">Password</label>
+                  <input id="adminPassword" type="text" placeholder="ตั้งรหัสผ่าน">
+                </div>
+                <div class="form-group">
+                  <label for="adminDisplayName">ชื่อที่แสดง</label>
+                  <input id="adminDisplayName" type="text" placeholder="เช่น เซลล์ นิตต้า">
+                </div>
+              </div>
+
+              <label>สิทธิ์ฝ่าย</label>
+              <div class="checkbox-grid" id="departmentPermissionChecks"></div>
+
+              <label>สิทธิ์โครงการ</label>
+              <div class="checkbox-grid" id="projectPermissionChecks"></div>
+
+              <label class="check-item" style="margin-bottom: 14px;">
+                <input type="checkbox" id="adminIsAdmin"> ให้สิทธิ์จัดการ Permission
+              </label>
+
+              <div class="row-actions">
+                <button class="btn primary" type="submit">บันทึก User</button>
+                <button class="btn" type="button" onclick="resetAdminForm()">ล้างฟอร์ม</button>
+                <button class="btn" type="button" onclick="resetUsersToDefault()">คืนค่าเริ่มต้น</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="admin-panel">
+            <h2>รายชื่อ User</h2>
+            <div class="user-list" id="userList"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <script>
+    const STORAGE_USERS_KEY = 'boutikhomesPortalUsers';
+
+    const PROJECTS = {
+      valley: 'โครงการเวอร์โซ่ วัลเลย์ พระราม 2',
+      samaedam: 'โครงการเวอร์โซ่ แสมดำ',
+      viaste: 'โครงการเวียสเต้ พระราม 2'
+    };
+
+    const DEFAULT_USERS = {
+      nitta: {
+        password: '4713',
+        name: 'เซลล์ นิตต้า',
+        departments: ['sales'],
+        projects: ['valley']
+      },
+      arm: {
+        password: '5662',
+        name: 'เซลล์ อาร์ม',
+        departments: ['sales'],
+        projects: ['samaedam']
+      },
+      ant: {
+        password: '8829',
+        name: 'เซลล์ แอ๊นท์',
+        departments: ['sales'],
+        projects: ['viaste']
+      },
+      muk: {
+        password: '4773',
+        name: 'เซลล์ มุก',
+        departments: ['sales'],
+        projects: ['valley', 'samaedam']
+      },
+      anpan: {
+        password: '1805',
+        name: 'เซลล์ อันปัน',
+        departments: ['sales'],
+        projects: ['valley', 'samaedam', 'viaste']
+      },
+      patch: {
+        password: '4144',
+        name: 'พัช',
+        departments: ['marketing'],
+        projects: ['valley', 'samaedam', 'viaste']
+      },
+      benz: {
+        password: '9881',
+        name: 'เบนซ์',
+        departments: ['marketing'],
+        projects: ['valley', 'samaedam', 'viaste']
+      },
+      manager: {
+        password: 'manager2026',
+        name: 'ผู้บริหาร',
+        departments: ['sales', 'marketing', 'management'],
+        projects: ['valley', 'samaedam', 'viaste']
+      },
+      cs: {
+        password: 'cs2026',
+        name: 'ลูกค้า / CS',
+        departments: ['service'],
+        projects: ['valley']
+      },
+      admin: {
+        password: 'boutikadmin',
+        name: 'ผู้ดูแลระบบ',
+        departments: ['sales', 'marketing', 'management', 'service'],
+        projects: ['valley', 'samaedam', 'viaste'],
+        isAdmin: true
+      }
+    };
+
+    ensureDefaultUsers();
+
+    const departmentLabels = {
+      sales: 'ฝ่ายขาย',
+      marketing: 'ฝ่ายการตลาด',
+      management: 'ผู้บริหาร',
+      service: 'ลูกค้า / CS'
+    };
+
+    function getUsers() {
+      const saved = localStorage.getItem(STORAGE_USERS_KEY);
+      if (!saved) return JSON.parse(JSON.stringify(DEFAULT_USERS));
+
+      try {
+        return JSON.parse(saved);
+      } catch (error) {
+        return JSON.parse(JSON.stringify(DEFAULT_USERS));
+      }
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(users));
+    }
+
+    function ensureDefaultUsers() {
+      if (!localStorage.getItem(STORAGE_USERS_KEY)) saveUsers(JSON.parse(JSON.stringify(DEFAULT_USERS)));
+    }
+
+    function loginPortal(event) {
+      event.preventDefault();
+      const username = document.getElementById('username').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const user = getUsers()[username];
+
+      if (!user || user.password !== password) {
+        sessionStorage.removeItem('boutikPortalProfile');
+        setAuthStatus('<span class="auth-error">Username หรือ Password ไม่ถูกต้อง กรุณาลองใหม่</span>');
+        return;
+      }
+
+      const profile = {
+        username,
+        name: user.name,
+        departments: user.departments || user.permissions || [],
+        projects: user.projects || [],
+        isAdmin: Boolean(user.isAdmin)
+      };
+
+      sessionStorage.setItem('boutikPortalProfile', JSON.stringify(profile));
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      showApp(profile);
+    }
+
+    function showApp(profile) {
+      document.getElementById('loginPage').classList.add('hidden');
+      document.getElementById('appPage').classList.remove('hidden');
+      document.getElementById('userStatus').innerText = `${profile.name} (${profile.username})`;
+      applyPermissions(profile);
+      renderAdminArea(profile);
+    }
+
+    function applyPermissions(profile) {
+      const items = document.querySelectorAll('.permission-item');
+      const allowedDepartments = new Set(profile.departments || []);
+      const allowedProjects = new Set(profile.projects || []);
+
+      items.forEach(item => {
+        const permission = item.dataset.permission;
+        item.classList.toggle('permission-hidden', !allowedDepartments.has(permission));
+      });
+
+      document.querySelectorAll('.project-permission-item').forEach(item => {
+        const project = item.dataset.project;
+        item.classList.toggle('project-hidden', !allowedProjects.has(project));
+      });
+
+      const visibleDepartments = document.querySelectorAll('#departments .dept:not(.permission-hidden)').length;
+      document.getElementById('departmentEmpty').classList.toggle('hidden', visibleDepartments > 0);
+
+      const visibleProjects = document.querySelectorAll('#projects .project-card:not(.project-hidden)').length;
+      document.getElementById('projectEmpty').classList.toggle('hidden', visibleProjects > 0);
+    }
+
+    function selectProject(projectKey) {
+      const projectName = PROJECTS[projectKey] || projectKey;
+      sessionStorage.setItem('boutikSelectedProject', projectName);
+      document.getElementById('selectedProjectLabel').innerText = projectName;
+    }
+
+    function logoutPortal() {
+      sessionStorage.removeItem('boutikPortalProfile');
+      sessionStorage.removeItem('boutikSelectedProject');
+      document.getElementById('appPage').classList.add('hidden');
+      document.getElementById('loginPage').classList.remove('hidden');
+      document.getElementById('selectedProjectLabel').innerText = 'ยังไม่ได้เลือกโครงการ';
+      document.querySelectorAll('.admin-only').forEach(item => item.classList.add('hidden'));
+      setAuthStatus('ระบบจะแสดงเฉพาะโครงการและฝ่ายที่ผู้ใช้นั้นมีสิทธิ์เห็น');
+    }
+
+    function setAuthStatus(html) {
+      document.getElementById('authStatus').innerHTML = html;
+    }
+
+    function restoreSession() {
+      const rawProfile = sessionStorage.getItem('boutikPortalProfile');
+      if (!rawProfile) return;
+
+      try {
+        const profile = JSON.parse(rawProfile);
+        const currentUser = getUsers()[profile.username];
+        showApp(currentUser ? {
+          username: profile.username,
+          name: currentUser.name,
+          departments: currentUser.departments || currentUser.permissions || [],
+          projects: currentUser.projects || [],
+          isAdmin: Boolean(currentUser.isAdmin)
+        } : profile);
+        const selectedProject = sessionStorage.getItem('boutikSelectedProject');
+        if (selectedProject) document.getElementById('selectedProjectLabel').innerText = selectedProject;
+      } catch (error) {
+        sessionStorage.removeItem('boutikPortalProfile');
+        sessionStorage.removeItem('boutikSelectedProject');
+      }
+    }
+
+    function renderAdminArea(profile) {
+      const showAdmin = Boolean(profile.isAdmin);
+      document.querySelectorAll('.admin-only').forEach(item => item.classList.toggle('hidden', !showAdmin));
+      if (!showAdmin) return;
+
+      renderPermissionChecks();
+      renderUserList();
+    }
+
+    function renderPermissionChecks() {
+      document.getElementById('departmentPermissionChecks').innerHTML = Object.entries(departmentLabels).map(([key, label]) => `
+        <label class="check-item"><input type="checkbox" name="departments" value="${key}"> ${label}</label>
+      `).join('');
+
+      document.getElementById('projectPermissionChecks').innerHTML = Object.entries(PROJECTS).map(([key, label]) => `
+        <label class="check-item"><input type="checkbox" name="projects" value="${key}"> ${label}</label>
+      `).join('');
+    }
+
+    function getCheckedValues(name) {
+      return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(input => input.value);
+    }
+
+    function setCheckedValues(name, values) {
+      const allowed = new Set(values || []);
+      document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
+        input.checked = allowed.has(input.value);
+      });
+    }
+
+    function saveUserFromAdmin(event) {
+      event.preventDefault();
+      const username = document.getElementById('adminUsername').value.trim().toLowerCase();
+      const password = document.getElementById('adminPassword').value.trim();
+      const name = document.getElementById('adminDisplayName').value.trim();
+      const departments = getCheckedValues('departments');
+      const projects = getCheckedValues('projects');
+      const isAdmin = document.getElementById('adminIsAdmin').checked;
+
+      if (!username || !password || !name) {
+        alert('กรุณากรอก Username, Password และชื่อที่แสดง');
+        return;
+      }
+
+      const users = getUsers();
+      users[username] = {
+        password,
+        name,
+        departments,
+        projects,
+        isAdmin
+      };
+
+      if (username === 'admin') users[username].isAdmin = true;
+
+      saveUsers(users);
+      renderUserList();
+      resetAdminForm();
+    }
+
+    function editUser(username) {
+      const user = getUsers()[username];
+      if (!user) return;
+
+      document.getElementById('adminUsername').value = username;
+      document.getElementById('adminPassword').value = user.password || '';
+      document.getElementById('adminDisplayName').value = user.name || '';
+      setCheckedValues('departments', user.departments || user.permissions || []);
+      setCheckedValues('projects', user.projects || []);
+      document.getElementById('adminIsAdmin').checked = Boolean(user.isAdmin);
+      document.getElementById('adminUsername').focus();
+    }
+
+    function deleteUser(username) {
+      if (username === 'admin') {
+        alert('ไม่สามารถลบ admin หลักได้');
+        return;
+      }
+
+      if (!confirm(`ลบ User ${username}?`)) return;
+
+      const users = getUsers();
+      delete users[username];
+      saveUsers(users);
+      renderUserList();
+      resetAdminForm();
+    }
+
+    function resetAdminForm() {
+      document.getElementById('adminUsername').value = '';
+      document.getElementById('adminPassword').value = '';
+      document.getElementById('adminDisplayName').value = '';
+      setCheckedValues('departments', []);
+      setCheckedValues('projects', []);
+      document.getElementById('adminIsAdmin').checked = false;
+    }
+
+    function resetUsersToDefault() {
+      if (!confirm('คืนค่า User ทั้งหมดเป็นค่าเริ่มต้น? การแก้ไขใน browser นี้จะหายไป')) return;
+      localStorage.removeItem(STORAGE_USERS_KEY);
+      renderUserList();
+      resetAdminForm();
+    }
+
+    function renderUserList() {
+      const users = getUsers();
+      document.getElementById('userList').innerHTML = Object.entries(users).map(([username, user]) => {
+        const departments = (user.departments || user.permissions || []).map(key => departmentLabels[key]).filter(Boolean).join(', ') || '-';
+        const projects = (user.projects || []).map(key => PROJECTS[key]).filter(Boolean).join(', ') || '-';
+        const adminTag = user.isAdmin ? ' · Admin' : '';
+
+        return `
+          <div class="user-row">
+            <div class="user-row-head">
+              <strong>${user.name || username} (${username})${adminTag}</strong>
+              <div class="row-actions">
+                <button class="btn small" type="button" onclick="editUser('${username}')">แก้ไข</button>
+                <button class="btn small" type="button" onclick="deleteUser('${username}')">ลบ</button>
+              </div>
+            </div>
+            <div class="user-meta">ฝ่าย: ${departments}</div>
+            <div class="user-meta">โครงการ: ${projects}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    restoreSession();
+  </script>
+</body>
+</html>
