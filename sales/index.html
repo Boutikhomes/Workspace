@@ -590,6 +590,7 @@
                 <tr>
                   <th>วันที่</th>
                   <th>ลูกค้า</th>
+                  <th>เซลล์</th>
                   <th>ช่องทาง</th>
                   <th>สนใจ</th>
                   <th>ติดตามกลับ</th>
@@ -637,6 +638,7 @@
                 <tr>
                   <th>เวลาเข้า</th>
                   <th>ลูกค้า</th>
+                  <th>เซลล์</th>
                   <th>โครงการ</th>
                   <th>Source</th>
                   <th>ติดตามกลับ</th>
@@ -750,6 +752,15 @@
     const LEAD_KEY = 'boutikSalesLeads';
     const WALKIN_KEY = 'boutikSalesWalkins';
     const SALES_API_URL = 'https://script.google.com/macros/s/AKfycbzcD4DlhV1N3SGQ-XyW_HGlyk88X_nEGy9t_Ca-o-rFgbuNILfTOiHhmBAUODOFfrg/exec';
+    const SALES_ACCESS = {
+      nitta: ['เซลล์ นิตต้า'],
+      arm: ['เซลล์ อาร์ม'],
+      ant: ['เซลล์ แอ๊นท์'],
+      muk: ['เซลล์ มุก'],
+      anpan: ['เซลล์ อันปัน'],
+      manager: ['*'],
+      admin: ['*']
+    };
 
     let target = { reservedGoal: 13, transferredGoal: 11, reservedDone: 8, transferredDone: 5 };
     const defaultLeads = [
@@ -757,6 +768,7 @@
         id: 1001,
         date: '2026-05-21',
         name: 'ตัวอย่าง Lead 01',
+        salesName: 'เซลล์ อาร์ม',
         phone: '08x-xxx-1111',
         channel: 'Facebook',
         interest: 'บ้านแปลง A-12',
@@ -768,6 +780,7 @@
         id: 1002,
         date: '2026-05-20',
         name: 'ตัวอย่าง Lead 02',
+        salesName: 'เซลล์ มุก',
         phone: '09x-xxx-2222',
         channel: 'Line',
         interest: 'งบ 5-7 ล้าน',
@@ -777,9 +790,12 @@
       }
     ];
 
+    const portalProfile = getPortalProfile();
     let pins = load(PIN_KEY, []);
-    let leads = load(LEAD_KEY, defaultLeads);
-    let walkins = load(WALKIN_KEY, []);
+    let allLeads = load(LEAD_KEY, defaultLeads);
+    let allWalkins = load(WALKIN_KEY, []);
+    let leads = filterBySalesAccess(allLeads);
+    let walkins = filterBySalesAccess(allWalkins);
     let selectedPinId = pins.length ? pins[pins.length - 1].id : null;
     let selectedLeadId = leads.length ? leads[0].id : null;
     let selectedWalkinId = walkins.length ? walkins[0].id : null;
@@ -835,6 +851,8 @@
     }
 
     function renderAll() {
+      leads = filterBySalesAccess(allLeads);
+      walkins = filterBySalesAccess(allWalkins);
       renderMap();
       renderTargets();
       renderAppointments();
@@ -926,12 +944,13 @@
     function renderLeads() {
       const rows = document.getElementById('leadRows');
       if (!leads.length) {
-        rows.innerHTML = '<tr><td colspan="6" class="section-note">ยังไม่มี Lead</td></tr>';
+        rows.innerHTML = '<tr><td colspan="7" class="section-note">ยังไม่มี Lead</td></tr>';
       } else {
         rows.innerHTML = leads.map(lead => `
           <tr class="${lead.id === selectedLeadId ? 'selected' : ''}" onclick="selectLead('${lead.id}')">
             <td>${formatDate(lead.date)}</td>
             <td>${escapeHtml(lead.name)}<br><span class="section-note">${escapeHtml(lead.phone || '')}</span></td>
+            <td>${escapeHtml(lead.salesName || lead.saleName || '-')}</td>
             <td>${escapeHtml(lead.channel || lead.source || '-')}</td>
             <td>${escapeHtml(lead.interest || '-')}</td>
             <td>${formatThaiDateTime(lead.followDate)}</td>
@@ -980,6 +999,7 @@
         id: Date.now(),
         date: today(),
         name: `Lead ใหม่ ${leads.length + 1}`,
+        salesName: getCurrentSalesName(),
         phone: '',
         channel: 'Facebook',
         interest: 'รอกรอกความสนใจ',
@@ -988,9 +1008,10 @@
         followups: []
       };
       if (apiUrl) return runApiMutation('createLead', lead);
-      leads.unshift(lead);
+      allLeads.unshift(lead);
+      leads = filterBySalesAccess(allLeads);
       selectedLeadId = lead.id;
-      save(LEAD_KEY, leads);
+      save(LEAD_KEY, allLeads);
       renderAll();
     }
 
@@ -1019,6 +1040,7 @@
       const walkin = {
         id: Date.now(),
         sourceLeadId,
+        salesName: getCurrentSalesName(),
         visitTime: value('visitTime'),
         name: value('customerName'),
         project: value('projectName'),
@@ -1052,18 +1074,19 @@
         clearWalkinForm();
         return;
       }
-      walkins.unshift(walkin);
+      allWalkins.unshift(walkin);
+      walkins = filterBySalesAccess(allWalkins);
       selectedWalkinId = walkin.id;
       if (sourceLeadId) {
-        const lead = leads.find(item => String(item.id) === String(sourceLeadId));
+        const lead = allLeads.find(item => String(item.id) === String(sourceLeadId));
         if (lead) {
           lead.status = 'เป็น Walk-in แล้ว';
           lead.followups = lead.followups || [];
           lead.followups.unshift({ at: timestamp(), text: 'เปลี่ยน Lead เป็นลูกค้า Walk-in แล้ว' });
-          save(LEAD_KEY, leads);
+          save(LEAD_KEY, allLeads);
         }
       }
-      save(WALKIN_KEY, walkins);
+      save(WALKIN_KEY, allWalkins);
       clearWalkinForm();
       showView('walkins');
       renderAll();
@@ -1079,12 +1102,13 @@
     function renderWalkins() {
       const rows = document.getElementById('walkinRows');
       if (!walkins.length) {
-        rows.innerHTML = '<tr><td colspan="6" class="section-note">ยังไม่มีรายการ Walk-in</td></tr>';
+        rows.innerHTML = '<tr><td colspan="7" class="section-note">ยังไม่มีรายการ Walk-in</td></tr>';
       } else {
         rows.innerHTML = walkins.map(walkin => `
           <tr class="${walkin.id === selectedWalkinId ? 'selected' : ''}" onclick="selectWalkin('${walkin.id}')">
             <td>${escapeHtml(walkin.visitTime || '-')}</td>
             <td>${escapeHtml(walkin.name)}<br><span class="section-note">${escapeHtml(walkin.phone || '')}</span></td>
+            <td>${escapeHtml(walkin.salesName || walkin.saleName || '-')}</td>
             <td>${escapeHtml(walkin.project || '-')}</td>
             <td>${escapeHtml(walkin.source || '-')}</td>
             <td>${formatThaiDateTime(walkin.nextFollowDate)}</td>
@@ -1147,9 +1171,10 @@
       const lead = leads.find(item => String(item.id) === String(selectedLeadId));
       if (!lead) return;
       if (apiUrl) return runApiMutation('deleteLead', { id: lead.id });
-      leads = leads.filter(item => String(item.id) !== String(lead.id));
+      allLeads = allLeads.filter(item => String(item.id) !== String(lead.id));
+      leads = filterBySalesAccess(allLeads);
       selectedLeadId = leads.length ? leads[0].id : null;
-      save(LEAD_KEY, leads);
+      save(LEAD_KEY, allLeads);
       renderAll();
     }
 
@@ -1198,22 +1223,66 @@
     }
 
     function applyRemoteData(data) {
-      leads = (data.leads || []).map(normalizeLeadFromApi);
-      walkins = (data.walkins || []).map(normalizeWalkinFromApi);
+      allLeads = (data.leads || []).map(normalizeLeadFromApi);
+      allWalkins = (data.walkins || []).map(normalizeWalkinFromApi);
+      leads = filterBySalesAccess(allLeads);
+      walkins = filterBySalesAccess(allWalkins);
       target = data.kpi || target;
       selectedLeadId = leads.length ? leads[0].id : null;
       selectedWalkinId = walkins.length ? walkins[0].id : null;
-      save(LEAD_KEY, leads);
-      save(WALKIN_KEY, walkins);
+      save(LEAD_KEY, allLeads);
+      save(WALKIN_KEY, allWalkins);
       renderAll();
     }
 
     function normalizeLeadFromApi(lead) {
-      return { ...lead, followups: Array.isArray(lead.followups) ? lead.followups : [] };
+      return {
+        ...lead,
+        salesName: lead.salesName || lead.Sales_Name || lead.saleName || '',
+        followups: Array.isArray(lead.followups) ? lead.followups : []
+      };
     }
 
     function normalizeWalkinFromApi(walkin) {
-      return { ...walkin, followups: Array.isArray(walkin.followups) ? walkin.followups : [] };
+      return {
+        ...walkin,
+        salesName: walkin.salesName || walkin.Sale_Name || walkin.saleName || '',
+        followups: Array.isArray(walkin.followups) ? walkin.followups : []
+      };
+    }
+
+    function getPortalProfile() {
+      try {
+        return JSON.parse(sessionStorage.getItem('boutikPortalProfile') || 'null');
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function filterBySalesAccess(items) {
+      const allowedSalesNames = getAllowedSalesNames();
+      if (allowedSalesNames.includes('*')) return items;
+
+      return items.filter(item => {
+        const itemSalesName = normalizeSalesName(item.salesName || item.Sales_Name || item.Sale_Name || item.saleName || '');
+        return allowedSalesNames.some(name => itemSalesName === normalizeSalesName(name));
+      });
+    }
+
+    function getAllowedSalesNames() {
+      if (!portalProfile || !portalProfile.username) return ['*'];
+      return SALES_ACCESS[portalProfile.username] || ['*'];
+    }
+
+    function getCurrentSalesName() {
+      const allowedSalesNames = getAllowedSalesNames();
+      return allowedSalesNames.includes('*') ? '' : allowedSalesNames[0];
+    }
+
+    function normalizeSalesName(name) {
+      return String(name || '')
+        .replace(/\s+/g, '')
+        .trim();
     }
 
     function renderFollowups(followups = []) {
