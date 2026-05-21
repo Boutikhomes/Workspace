@@ -15,10 +15,11 @@
       --line: #d9e0e8;
       --brand: #184e77;
       --brand-deep: #0f3553;
-      --sales: #0f766e;
+      --sale: #0f766e;
       --marketing: #b45309;
       --management: #6d28d9;
       --service: #be123c;
+      --construction: #475569;
       --danger: #b91c1c;
       --shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
     }
@@ -388,10 +389,11 @@
       font-size: 14px;
     }
 
-    .sales { background: var(--sales); }
+    .sale { background: var(--sale); }
     .marketing { background: var(--marketing); }
     .management { background: var(--management); }
     .service { background: var(--service); }
+    .construction { background: var(--construction); }
 
     .permission-item.permission-hidden {
       display: none;
@@ -666,9 +668,9 @@
         </div>
 
         <div class="department-grid">
-          <a class="dept permission-item" data-permission="sales" href="./sales/">
+          <a class="dept permission-item" data-permission="sales" href="./sale/">
             <div>
-              <div class="dept-icon sales">S</div>
+              <div class="dept-icon sale">S</div>
               <h3>ฝ่ายขาย</h3>
               <p>ระบบติดตาม Lead, Walk-in, Follow up และงานประจำวันของทีมขาย</p>
             </div>
@@ -701,6 +703,15 @@
             </div>
             <div class="dept-footer">เข้าสู่ CS <span>→</span></div>
           </a>
+
+          <a class="dept permission-item" data-permission="construction" href="./workspace/construction/">
+            <div>
+              <div class="dept-icon construction">B</div>
+              <h3>ฝ่ายก่อสร้าง</h3>
+              <p>ทางเข้าระบบงานก่อสร้าง ติดตามหน้างาน เอกสาร และสถานะงานของแต่ละโครงการ</p>
+            </div>
+            <div class="dept-footer">เข้าสู่ก่อสร้าง <span>→</span></div>
+          </a>
         </div>
         <div class="permission-empty hidden" id="departmentEmpty">ผู้ใช้นี้ยังไม่มีสิทธิ์เห็นฝ่ายใด</div>
       </section>
@@ -711,9 +722,10 @@
           <div class="section-note">ลิงก์จะถูกกรองตามสิทธิ์ของผู้ใช้</div>
         </div>
         <div class="link-list">
-          <a class="quick-link permission-item" data-permission="sales" href="./sales/">Sales CRM <span>เปิดหน้า sales</span></a>
+          <a class="quick-link permission-item" data-permission="sales" href="./sale/">Sales CRM <span>เปิดหน้า sale</span></a>
           <a class="quick-link permission-item" data-permission="marketing" href="#marketing">Marketing Plan <span>รอใส่ URL</span></a>
           <a class="quick-link permission-item" data-permission="management" href="#management">Permission Admin <span>รอใส่ URL</span></a>
+          <a class="quick-link permission-item" data-permission="construction" href="./workspace/construction/">Construction <span>เปิดหน้า construction</span></a>
           <a class="quick-link" href="README.md">Setup Guide <span>README</span></a>
         </div>
       </section>
@@ -837,7 +849,7 @@
       admin: {
         password: 'boutikadmin',
         name: 'ผู้ดูแลระบบ',
-        departments: ['sales', 'marketing', 'management', 'service'],
+        departments: ['sales', 'marketing', 'management', 'service', 'construction'],
         projects: ['valley', 'samaedam', 'viaste'],
         isAdmin: true
       }
@@ -849,7 +861,8 @@
       sales: 'ฝ่ายขาย',
       marketing: 'ฝ่ายการตลาด',
       management: 'ผู้บริหาร',
-      service: 'ลูกค้า / CS'
+      service: 'ลูกค้า / CS',
+      construction: 'ฝ่ายก่อสร้าง'
     };
 
     function getUsers() {
