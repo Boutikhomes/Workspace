@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Construction Operations</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">C</span>
+        <div>
+          <strong>Construction</strong>
+          <span>Project Control</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="../">Workspace</a>
+        <a class="active" href="#plans">แผนงานโครงการ</a>
+        <a href="#daily">งานประจำวัน</a>
+        <a href="#materials">เรียกวัสดุ</a>
+        <a href="#inspection">รูปงานและตรวจงาน</a>
+        <a href="#payments">จ่ายผู้รับเหมา</a>
+      </nav>
+      <div class="sync-box">
+        <span>ข้อมูลเชื่อมโยง</span>
+        <strong>Sales, After Sales, Marketing, CEO</strong>
+      </div>
+    </aside>
+
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">ฝ่ายก่อสร้าง</p>
+          <h1>ศูนย์ควบคุมงานก่อสร้าง</h1>
+        </div>
+        <div class="top-actions">
+          <button class="icon-button" aria-label="Refresh sync" title="อัปเดตข้อมูล">↻</button>
+          <button class="primary-button" id="openRequest">ส่งคำขอเปลี่ยนแผน</button>
+        </div>
+      </header>
+
+      <section class="status-grid" aria-label="ภาพรวมงานก่อสร้าง">
+        <article>
+          <span>โครงการที่กำลังทำ</span>
+          <strong>3</strong>
+          <small>แยกตามแผนงานก่อสร้าง</small>
+        </article>
+        <article>
+          <span>งานที่ต้องทำวันนี้</span>
+          <strong>18</strong>
+          <small>รวมงานจากทุกฝ่าย</small>
+        </article>
+        <article>
+          <span>วัสดุที่ต้องเรียก</span>
+          <strong>7</strong>
+          <small>ภายใน 14 วัน</small>
+        </article>
+        <article>
+          <span>ตรวจงานไม่ผ่าน</span>
+          <strong>4</strong>
+          <small>ต้องแก้ไขก่อนปิดงวด</small>
+        </article>
+      </section>
+
+      <section class="workspace" id="plans">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Project Schedule</p>
+            <h2>แผนงานโครงการ</h2>
+          </div>
+          <div class="segmented" role="tablist" aria-label="Project filters">
+            <button class="active" data-project-filter="all">ทั้งหมด</button>
+            <button data-project-filter="north">โครงการเหนือ</button>
+            <button data-project-filter="east">โครงการตะวันออก</button>
+            <button data-project-filter="west">โครงการตะวันตก</button>
+          </div>
+        </div>
+        <div class="plan-board" id="planBoard"></div>
+      </section>
+
+      <section class="workspace" id="daily">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Daily Work Queue</p>
+            <h2>อัปเดตงานก่อสร้างประจำวัน</h2>
+          </div>
+          <select id="sourceFilter" aria-label="กรองตามฝ่าย">
+            <option value="all">ทุกฝ่าย</option>
+            <option value="sales">ฝ่ายขาย</option>
+            <option value="afterSales">หลังการขาย</option>
+            <option value="marketing">การตลาด</option>
+            <option value="ceo">CEO</option>
+          </select>
+        </div>
+        <div class="daily-layout">
+          <div class="task-list" id="taskList"></div>
+          <aside class="handoff-panel">
+            <h3>ข้อมูลที่ส่งต่อให้ก่อสร้าง</h3>
+            <div class="handoff-item">
+              <span>ฝ่ายขาย</span>
+              <p>บ้าน B-18 คาดโอนกรรมสิทธิ์ 12 มิ.ย. 2026 เตรียมตรวจรับและเก็บ defect</p>
+            </div>
+            <div class="handoff-item">
+              <span>หลังการขาย</span>
+              <p>แจ้งซ่อมงานรั่วซึม A-07 และตรวจประกันปี C-14</p>
+            </div>
+            <div class="handoff-item">
+              <span>การตลาด</span>
+              <p>ขอเคลียร์พื้นที่และติดไฟหน้างานสำหรับถ่ายทำคอนเทนต์</p>
+            </div>
+            <div class="handoff-item">
+              <span>CEO</span>
+              <p>เพิ่มงานทั่วไป: ตรวจความเรียบร้อยถนนทางเข้าโครงการก่อนวันเยี่ยมชม</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="workspace" id="materials">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Material Call Plan</p>
+            <h2>แผนงานเรียกวัสดุ</h2>
+          </div>
+          <button class="secondary-button">+ เพิ่มรายการวัสดุ</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>โครงการ</th>
+                <th>หมวดงาน</th>
+                <th>วัสดุ</th>
+                <th>วันที่ต้องเรียก</th>
+                <th>สัมพันธ์กับแผนงาน</th>
+                <th>สถานะ</th>
+              </tr>
+            </thead>
+            <tbody id="materialRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="workspace" id="inspection">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Drive Photo Log</p>
+            <h2>รูปงานก่อสร้างและตรวจงานช่าง</h2>
+          </div>
+          <button class="secondary-button">เชื่อม Google Drive</button>
+        </div>
+        <div class="inspection-grid" id="inspectionGrid"></div>
+      </section>
+
+      <section class="workspace" id="payments">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Contractor Forecast</p>
+            <h2>แผนการจ่ายเงินผู้รับเหมา</h2>
+          </div>
+          <select aria-label="เลือกเดือน">
+            <option>มิถุนายน 2026</option>
+            <option>กรกฎาคม 2026</option>
+            <option>สิงหาคม 2026</option>
+          </select>
+        </div>
+        <div class="forecast-grid" id="forecastGrid"></div>
+      </section>
+    </main>
+
+    <dialog id="requestDialog">
+      <form method="dialog" class="request-form">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Schedule Request</p>
+            <h2>คำขอเปลี่ยนแผนงาน</h2>
+          </div>
+          <button class="icon-button" value="cancel" aria-label="Close">×</button>
+        </div>
+        <label>
+          โครงการ
+          <select>
+            <option>โครงการเหนือ</option>
+            <option>โครงการตะวันออก</option>
+            <option>โครงการตะวันตก</option>
+          </select>
+        </label>
+        <label>
+          หมวดงาน
+          <select>
+            <option>ก่อสร้างสาธารณูปโภค</option>
+            <option>ก่อสร้างบ้าน</option>
+            <option>เรียกวัสดุ</option>
+          </select>
+        </label>
+        <label>
+          เหตุผล
+          <textarea placeholder="เร็วกว่าหรือช้ากว่ากำหนด เพราะ..."></textarea>
+        </label>
+        <button class="primary-button" value="default">บันทึกคำขอ</button>
+      </form>
+    </dialog>
+
+    <script src="script.js"></script>
+  </body>
+</html>
