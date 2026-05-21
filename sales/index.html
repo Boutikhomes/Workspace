@@ -4,17 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Boutikhomes Sales Workspace</title>
-  <meta name="description" content="ระบบฝ่ายขาย Boutikhomes สำหรับผังโครงการ Lead Walk-in Follow up และเป้าขาย">
   <style>
     :root {
       --bg: #f4f7f8;
       --panel: #ffffff;
-      --panel-soft: #f7faf9;
+      --soft: #f7faf9;
       --ink: #1f2937;
       --muted: #667085;
       --line: #d8e2e4;
       --brand: #0f766e;
-      --brand-deep: #134e4a;
+      --brand-dark: #134e4a;
       --blue: #2563eb;
       --amber: #b45309;
       --green: #15803d;
@@ -28,21 +27,18 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background:
-        linear-gradient(180deg, rgba(15, 118, 110, 0.1), rgba(244, 247, 248, 0) 360px),
-        var(--bg);
+      background: linear-gradient(180deg, rgba(15, 118, 110, 0.1), rgba(244, 247, 248, 0) 360px), var(--bg);
       color: var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Thai", "Helvetica Neue", Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Thai", Arial, sans-serif;
     }
 
     a { color: inherit; }
-
     .hidden { display: none !important; }
 
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 10;
       background: rgba(255, 255, 255, 0.92);
       border-bottom: 1px solid var(--line);
       backdrop-filter: blur(14px);
@@ -58,11 +54,10 @@
       gap: 16px;
     }
 
-    .brand-lockup {
+    .brand {
       display: flex;
       align-items: center;
       gap: 12px;
-      min-width: 0;
     }
 
     .brand-mark {
@@ -73,27 +68,1237 @@
       color: #fff;
       display: grid;
       place-items: center;
-      font-weight: 900;
       font-size: 20px;
-      flex: 0 0 auto;
+      font-weight: 900;
     }
 
-    .brand-lockup strong {
+    .brand strong {
       display: block;
-      color: var(--brand-deep);
+      color: var(--brand-dark);
       font-size: 18px;
-      white-space: nowrap;
     }
 
-    .brand-lockup span {
+    .brand span {
       color: var(--muted);
       font-size: 13px;
     }
 
-    .top-actions {
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    button,
+    .btn,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button,
+    .btn {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--brand);
+      padding: 8px 12px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+
+    button.active,
+    .primary {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .danger { color: var(--rose); }
+
+    .wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 18px 52px;
+    }
+
+    .page-head,
+    .panel,
+    .stat,
+    .form-panel,
+    .table-shell {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .page-head {
+      padding: 22px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .eyebrow {
+      color: var(--brand);
+      font-size: 14px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      color: var(--brand-dark);
+      letter-spacing: 0;
+    }
+
+    h1 { font-size: 31px; line-height: 1.18; }
+    h2 { font-size: 22px; }
+    h3 { font-size: 17px; }
+
+    .lead {
+      max-width: 760px;
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    label {
+      color: var(--brand-dark);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      padding: 9px 11px;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+    }
+
+    .field { display: grid; gap: 7px; }
+    .section-note { color: var(--muted); font-size: 14px; line-height: 1.55; }
+
+    .api-box {
+      min-width: min(100%, 360px);
+      display: grid;
+      gap: 7px;
+    }
+
+    .api-status {
+      min-height: 20px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .api-status.ok { color: var(--brand); font-weight: 800; }
+    .api-status.error { color: var(--rose); font-weight: 800; }
+
+    .dashboard-grid,
+    .split-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .side-stack { display: grid; gap: 14px; }
+    .panel { padding: 16px; }
+
+    .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .map-board {
+      position: relative;
+      min-height: 610px;
+      background:
+        linear-gradient(90deg, rgba(15, 118, 110, 0.07) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(15, 118, 110, 0.07) 1px, transparent 1px),
+        #edf4f3;
+      background-size: 44px 44px;
+      border: 1px dashed #a9bdc0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .map-board.has-image {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .map-empty {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 24px;
+      color: var(--muted);
+      line-height: 1.7;
+      pointer-events: none;
+    }
+
+    .map-pin {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 3px solid #fff;
+      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.28);
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+    }
+
+    .available { background: var(--slate); }
+    .reserved { background: var(--amber); }
+    .transferred { background: var(--green); }
+    .building { background: var(--blue); }
+
+    .target-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat { padding: 16px; }
+    .stat span { color: var(--muted); font-size: 13px; font-weight: 800; }
+    .stat strong { display: block; margin-top: 8px; font-size: 30px; color: var(--ink); line-height: 1; }
+    .stat small { display: block; margin-top: 8px; color: var(--muted); line-height: 1.4; }
+
+    .progress {
+      height: 10px;
+      border-radius: 999px;
+      background: #e3ecee;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      background: var(--brand);
+    }
+
+    .status-list,
+    .appointment-list,
+    .follow-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .status-item,
+    .appointment-item,
+    .follow-item,
+    .empty {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fff;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 800;
+    }
+
+    .empty {
+      border-style: dashed;
+      background: var(--soft);
+      text-align: center;
+    }
+
+    .appointment-item strong,
+    .follow-item strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      display: inline-block;
+      margin-right: 8px;
+      vertical-align: -2px;
+    }
+
+    .table-shell {
+      overflow: hidden;
+      margin-top: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--brand-dark);
+      background: var(--soft);
+      font-weight: 900;
+    }
+
+    td { line-height: 1.55; }
+    tr.selected td { background: #eef9f7; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: 900;
+      background: #eef6f5;
+      color: var(--brand-dark);
+      white-space: nowrap;
+    }
+
+    .form-panel { padding: 18px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 13px 24px;
+    }
+
+    .wide { grid-column: 1 / -1; }
+
+    .action-row {
       display: flex;
       align-items: center;
       justify-content: flex-end;
       gap: 8px;
       flex-wrap: wrap;
+      margin-top: 14px;
     }
+
+    @media (max-width: 1080px) {
+      .dashboard-grid,
+      .split-grid { grid-template-columns: 1fr; }
+      .map-board { min-height: 480px; }
+    }
+
+    @media (max-width: 760px) {
+      .topbar-inner,
+      .page-head,
+      .panel-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      h1 { font-size: 26px; }
+      .form-grid,
+      .target-grid { grid-template-columns: 1fr; }
+      .map-board { min-height: 360px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">S</div>
+        <div>
+          <strong>Sales Workspace</strong>
+          <span>Boutikhomes</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <a class="btn" href="../">Workspace</a>
+        <button class="active" type="button" data-view-button="dashboard" onclick="showView('dashboard')">หน้าขาย</button>
+        <button type="button" data-view-button="leads" onclick="showView('leads')">Lead</button>
+        <button type="button" data-view-button="walkins" onclick="showView('walkins')">Walk-in</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="view" id="view-dashboard">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Sales Dashboard</div>
+          <h1>หน้าขาย</h1>
+          <p class="lead">โชว์เฉพาะภาพรวมที่ทีมขายต้องเห็นก่อน: ผังโครงการ, เป้าที่ยังขาด, และลูกค้าที่ต้องโทรคอนเฟิร์มนัดในสัปดาห์นี้</p>
+        </div>
+        <div class="api-box">
+          <label for="apiUrl">Google Sheet API URL</label>
+          <input id="apiUrl" type="url" placeholder="วาง Apps Script Web App URL">
+          <button class="primary" type="button" onclick="connectApi()">เชื่อม Google Sheet</button>
+          <div class="api-status" id="apiStatus">ยังใช้ข้อมูลทดลองใน browser</div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>ผังโครงการและสถานะบ้าน</h2>
+              <div class="section-note">อัปโหลดรูปผัง และคลิกบนผังเพื่อวางจุดสถานะบ้าน</div>
+            </div>
+            <input id="mapUpload" type="file" accept="image/*" aria-label="อัปโหลดรูปผังโครงการ">
+          </div>
+          <div class="map-board" id="mapBoard">
+            <div class="map-empty" id="mapEmpty">อัปโหลดรูปผังโครงการ หรือคลิกบนพื้นที่นี้เพื่อวางจุดตัวอย่าง<br>ข้อมูลจุดจะถูกเก็บใน browser เครื่องนี้ระหว่างทดสอบ</div>
+          </div>
+        </section>
+
+        <aside class="side-stack">
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>ขาดเป้าเท่าไร</h2>
+                <div class="section-note">อ่านจาก sale_KPI ถ้าเชื่อม Google Sheet แล้ว</div>
+              </div>
+            </div>
+            <div class="target-grid">
+              <div class="stat">
+                <span>ขาดยอดจอง</span>
+                <strong id="reservedGap">5</strong>
+                <small id="reservedTargetText">ทำได้ 8 / เป้า 13</small>
+                <div class="progress"><span id="reservedProgress"></span></div>
+              </div>
+              <div class="stat">
+                <span>ขาดยอดโอน</span>
+                <strong id="transferGap">6</strong>
+                <small id="transferTargetText">ทำได้ 5 / เป้า 11</small>
+                <div class="progress"><span id="transferProgress"></span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>ต้องโทรคอนเฟิร์มนัดสัปดาห์นี้</h2>
+                <div class="section-note">รวมจาก Lead และ Walk-in ที่มีวันที่ติดตามกลับ</div>
+              </div>
+            </div>
+            <div class="appointment-list" id="appointmentList"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>ตั้งค่าจุดบนผัง</h2>
+                <div class="section-note">ใช้สำหรับวางจุดใหม่หรือเปลี่ยนจุดล่าสุดเป็นโอนแล้ว</div>
+              </div>
+            </div>
+            <div class="field">
+              <label for="plotCode">เลขแปลง / บ้าน</label>
+              <input id="plotCode" type="text" placeholder="เช่น A-12">
+            </div>
+            <div class="field">
+              <label for="plotStatus">สถานะ</label>
+              <select id="plotStatus">
+                <option value="available">แปลงว่าง</option>
+                <option value="reserved">จองแล้ว</option>
+                <option value="transferred">โอนแล้ว</option>
+                <option value="building">กำลังก่อสร้าง</option>
+              </select>
+            </div>
+            <div class="action-row">
+              <button class="primary" type="button" onclick="markSelectedTransferred()">โอนแล้ว</button>
+              <button class="danger" type="button" onclick="resetMapPins()">ล้างจุด</button>
+            </div>
+            <div class="status-list">
+              <div class="status-item"><span><i class="dot available"></i>แปลงว่าง</span><strong id="legendAvailable">0</strong></div>
+              <div class="status-item"><span><i class="dot reserved"></i>จองแล้ว</span><strong id="legendReserved">0</strong></div>
+              <div class="status-item"><span><i class="dot transferred"></i>โอนแล้ว</span><strong id="legendTransferred">0</strong></div>
+              <div class="status-item"><span><i class="dot building"></i>กำลังก่อสร้าง</span><strong id="legendBuilding">0</strong></div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <section class="view hidden" id="view-leads">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Lead Management</div>
+          <h1>Lead โครงการ</h1>
+          <p class="lead">อ่าน Lead จาก Active_Lead เพิ่ม Follow up ลบ Lead และเปลี่ยนเป็น Walk-in ได้</p>
+        </div>
+        <button class="primary" type="button" onclick="openLeadForm()">เพิ่ม Lead ตัวอย่าง</button>
+      </div>
+
+      <div class="split-grid">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>รายการ Lead</h2>
+              <div class="section-note">คลิกเลือกลูกค้าเพื่อดูรายละเอียด</div>
+            </div>
+          </div>
+          <div class="table-shell">
+            <table>
+              <thead>
+                <tr>
+                  <th>วันที่</th>
+                  <th>ลูกค้า</th>
+                  <th>ช่องทาง</th>
+                  <th>สนใจ</th>
+                  <th>ติดตามกลับ</th>
+                  <th>สถานะ</th>
+                </tr>
+              </thead>
+              <tbody id="leadRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <aside class="panel">
+          <div class="panel-head">
+            <div>
+              <h2 id="leadDetailTitle">เลือก Lead</h2>
+              <div class="section-note">เพิ่มบันทึกหลัง Follow up ทุกครั้ง</div>
+            </div>
+          </div>
+          <div id="leadDetail" class="empty">คลิกเลือกลูกค้าจากตาราง Lead</div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="view hidden" id="view-walkins">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Walk-in Management</div>
+          <h1>บันทึกลูกค้า Walk-in</h1>
+          <p class="lead">ใช้ได้ทั้งลูกค้า Walk-in ที่เปลี่ยนมาจาก Lead และลูกค้าที่เดินเข้ามาเองโดยไม่ได้มาจาก Lead</p>
+        </div>
+      </div>
+
+      <form class="form-panel" id="walkinForm" onsubmit="saveWalkin(event)">
+        <div class="panel-head">
+          <div>
+            <h2 id="walkinFormTitle">บันทึกลูกค้า Walk-in</h2>
+            <div class="section-note">ช่องข้อมูลอ้างอิงจากฟอร์ม Walk-in</div>
+          </div>
+          <button type="button" onclick="clearWalkinForm()">ล้างฟอร์ม</button>
+        </div>
+
+        <input id="walkinSourceLeadId" type="hidden">
+        <div class="form-grid">
+          <div class="field">
+            <label for="visitTime">เวลาเข้าเยี่ยม</label>
+            <input id="visitTime" type="time" value="08:00">
+          </div>
+          <div class="field">
+            <label for="customerName">ชื่อลูกค้า</label>
+            <input id="customerName" type="text" required>
+          </div>
+          <div class="field wide">
+            <label for="projectName">โครงการ *</label>
+            <select id="projectName" required>
+              <option value="">-เลือก-</option>
+              <option>โครงการเวอร์โซ่ วัลเลย์ พระราม 2</option>
+              <option>โครงการเวอร์โซ่ แสมดำ</option>
+              <option>โครงการเวียสเต้ พระราม 2</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="age">อายุ</label>
+            <input id="age" type="number" min="1">
+          </div>
+          <div class="field">
+            <label for="phone">เบอร์ติดต่อ</label>
+            <input id="phone" type="tel" placeholder="0xx-xxx-xxxx">
+          </div>
+          <div class="field wide">
+            <label for="source">สื่อ (Source)</label>
+            <select id="source">
+              <option value="">-เลือก-</option>
+              <option>Lead จาก Facebook</option>
+              <option>Lead จาก Line</option>
+              <option>Instagram</option>
+              <option>Google Search</option>
+              <option>ป้ายหน้าโครงการ</option>
+              <option>แนะนำต่อ</option>
+              <option>Walk-in เอง</option>
+            </select>
+          </div>
+          <div class="field"><label for="visitorCount">จำนวนเข้าชม</label><input id="visitorCount" type="text" placeholder="-เลือก-"></div>
+          <div class="field"><label for="residentCount">จำนวนอยู่อาศัย</label><input id="residentCount" type="text" placeholder="-เลือก-"></div>
+          <div class="field"><label for="carCount">รถ (ยี่ห้อ/รุ่น)</label><input id="carCount" type="text" placeholder="-เลือก-"></div>
+          <div class="field"><label for="homeZone">เขตบ้าน</label><input id="homeZone" type="text" placeholder="-เลือก-"></div>
+          <div class="field"><label for="workZone">เขตทำงาน</label><input id="workZone" type="text" placeholder="-เลือก-"></div>
+          <div class="field"><label for="route">เส้นทางที่มา</label><input id="route" type="text" placeholder="-เลือก-"></div>
+          <div class="field wide"><label for="occupation">อาชีพ</label><input id="occupation" type="text" placeholder="-เลือก-"></div>
+          <div class="field"><label for="occupationType">ประเภทอาชีพ</label><input id="occupationType" type="text" placeholder="-เลือก-"></div>
+          <div class="field"><label for="companyName">ชื่อบริษัท</label><input id="companyName" type="text"></div>
+          <div class="field"><label for="personalIncome">รายได้ส่วนตัว</label><input id="personalIncome" type="text" placeholder="-เลือก-"></div>
+          <div class="field"><label for="familyIncome">รายได้ครอบครัว</label><input id="familyIncome" type="text" placeholder="-เลือก-"></div>
+          <div class="field"><label for="budget">งบประมาณ</label><input id="budget" type="text" placeholder="-เลือก-"></div>
+          <div class="field"><label for="houseType">แบบบ้าน</label><input id="houseType" type="text" placeholder="-เลือก-"></div>
+          <div class="field"><label for="customerGrade">เกรดลูกค้า</label><input id="customerGrade" type="text" placeholder="-เลือก-"></div>
+          <div class="field wide"><label for="bookingReason">สาเหตุที่ไม่จอง</label><input id="bookingReason" type="text" placeholder="-เลือก-"></div>
+          <div class="field wide"><label for="newHomeReason">เหตุผลซื้อที่อยู่ใหม่</label><input id="newHomeReason" type="text" placeholder="-เลือก-"></div>
+          <div class="field wide"><label for="decisionTime">ระยะเวลาตัดสินใจซื้อ</label><input id="decisionTime" type="text" placeholder="-เลือก-"></div>
+          <div class="field wide"><label for="nextFollowDate">วันที่สะดวกติดต่อกลับ</label><input id="nextFollowDate" type="datetime-local"></div>
+          <div class="field wide"><label for="extraDetail">รายละเอียดเพิ่มเติม</label><textarea id="extraDetail"></textarea></div>
+        </div>
+        <div class="action-row">
+          <button class="primary" type="submit">บันทึก Walk-in</button>
+        </div>
+      </form>
+
+      <div class="split-grid" style="margin-top: 14px;">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>รายการ Walk-in</h2>
+              <div class="section-note">คลิกเลือกลูกค้าเพื่อเพิ่ม Follow up</div>
+            </div>
+          </div>
+          <div class="table-shell">
+            <table>
+              <thead>
+                <tr>
+                  <th>เวลาเข้า</th>
+                  <th>ลูกค้า</th>
+                  <th>โครงการ</th>
+                  <th>Source</th>
+                  <th>ติดตามกลับ</th>
+                  <th>สถานะ</th>
+                </tr>
+              </thead>
+              <tbody id="walkinRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <aside class="panel">
+          <div class="panel-head">
+            <div>
+              <h2 id="walkinDetailTitle">เลือก Walk-in</h2>
+              <div class="section-note">เพิ่มบันทึกหลัง Follow up ทุกครั้ง</div>
+            </div>
+          </div>
+          <div id="walkinDetail" class="empty">คลิกเลือกลูกค้าจากตาราง Walk-in</div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const PIN_KEY = 'boutikSalesMapPins';
+    const LEAD_KEY = 'boutikSalesLeads';
+    const WALKIN_KEY = 'boutikSalesWalkins';
+    const API_URL_KEY = 'boutikSalesApiUrl';
+
+    let target = { reservedGoal: 13, transferredGoal: 11, reservedDone: 8, transferredDone: 5 };
+    const defaultLeads = [
+      {
+        id: 1001,
+        date: '2026-05-21',
+        name: 'ตัวอย่าง Lead 01',
+        phone: '08x-xxx-1111',
+        channel: 'Facebook',
+        interest: 'บ้านแปลง A-12',
+        status: 'รอติดต่อกลับ',
+        followDate: '2026-05-23T10:30',
+        followups: [{ at: '2026-05-21 09:20', text: 'ลูกค้าสอบถามโปรโมชันและนัดคุยอีกครั้ง' }]
+      },
+      {
+        id: 1002,
+        date: '2026-05-20',
+        name: 'ตัวอย่าง Lead 02',
+        phone: '09x-xxx-2222',
+        channel: 'Line',
+        interest: 'งบ 5-7 ล้าน',
+        status: 'นัดชมโครงการ',
+        followDate: '2026-05-25T14:00',
+        followups: []
+      }
+    ];
+
+    let pins = load(PIN_KEY, []);
+    let leads = load(LEAD_KEY, defaultLeads);
+    let walkins = load(WALKIN_KEY, []);
+    let selectedPinId = pins.length ? pins[pins.length - 1].id : null;
+    let selectedLeadId = leads.length ? leads[0].id : null;
+    let selectedWalkinId = walkins.length ? walkins[0].id : null;
+    let apiUrl = localStorage.getItem(API_URL_KEY) || '';
+
+    const statusLabels = {
+      available: 'แปลงว่าง',
+      reserved: 'จองแล้ว',
+      transferred: 'โอนแล้ว',
+      building: 'กำลังก่อสร้าง'
+    };
+
+    const mapBoard = document.getElementById('mapBoard');
+    const mapEmpty = document.getElementById('mapEmpty');
+    const plotCode = document.getElementById('plotCode');
+    const plotStatus = document.getElementById('plotStatus');
+    const apiUrlInput = document.getElementById('apiUrl');
+    const apiStatus = document.getElementById('apiStatus');
+
+    apiUrlInput.value = apiUrl;
+    setApiStatus(apiUrl ? 'พร้อมเชื่อม Google Sheet กดปุ่มเพื่อ sync' : 'ยังใช้ข้อมูลทดลองใน browser', apiUrl ? 'ok' : '');
+
+    document.getElementById('mapUpload').addEventListener('change', event => {
+      const file = event.target.files[0];
+      if (!file) return;
+      mapBoard.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
+      mapBoard.classList.add('has-image');
+      mapEmpty.style.display = 'none';
+    });
+
+    mapBoard.addEventListener('click', event => {
+      if (event.target.classList.contains('map-pin')) return;
+      const rect = mapBoard.getBoundingClientRect();
+      const pin = {
+        id: Date.now(),
+        code: plotCode.value.trim() || `Plot ${pins.length + 1}`,
+        status: plotStatus.value,
+        x: ((event.clientX - rect.left) / rect.width) * 100,
+        y: ((event.clientY - rect.top) / rect.height) * 100
+      };
+      pins.push(pin);
+      selectedPinId = pin.id;
+      save(PIN_KEY, pins);
+      renderMap();
+    });
+
+    function showView(name) {
+      document.querySelectorAll('.view').forEach(view => view.classList.add('hidden'));
+      document.getElementById(`view-${name}`).classList.remove('hidden');
+      document.querySelectorAll('[data-view-button]').forEach(button => {
+        button.classList.toggle('active', button.dataset.viewButton === name);
+      });
+      history.replaceState(null, '', `#${name}`);
+      renderAll();
+    }
+
+    function renderAll() {
+      renderMap();
+      renderTargets();
+      renderAppointments();
+      renderLeads();
+      renderWalkins();
+    }
+
+    function renderMap() {
+      mapBoard.querySelectorAll('.map-pin').forEach(pin => pin.remove());
+      pins.forEach(pin => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `map-pin ${pin.status}`;
+        button.style.left = `${pin.x}%`;
+        button.style.top = `${pin.y}%`;
+        button.title = `${pin.code}: ${statusLabels[pin.status]}`;
+        button.onclick = () => {
+          selectedPinId = pin.id;
+          plotCode.value = pin.code;
+          plotStatus.value = pin.status;
+        };
+        mapBoard.appendChild(button);
+      });
+      mapEmpty.style.display = pins.length || mapBoard.classList.contains('has-image') ? 'none' : 'grid';
+      updateMapCounts();
+    }
+
+    function updateMapCounts() {
+      const counts = pins.reduce((acc, pin) => {
+        acc[pin.status] = (acc[pin.status] || 0) + 1;
+        return acc;
+      }, { available: 0, reserved: 0, transferred: 0, building: 0 });
+      document.getElementById('legendAvailable').innerText = counts.available;
+      document.getElementById('legendReserved').innerText = counts.reserved;
+      document.getElementById('legendTransferred').innerText = counts.transferred;
+      document.getElementById('legendBuilding').innerText = counts.building;
+    }
+
+    function markSelectedTransferred() {
+      if (!pins.length) return;
+      const pin = pins.find(item => item.id === (selectedPinId || pins[pins.length - 1].id));
+      if (!pin) return;
+      pin.status = 'transferred';
+      plotStatus.value = 'transferred';
+      save(PIN_KEY, pins);
+      renderMap();
+    }
+
+    function resetMapPins() {
+      pins = [];
+      selectedPinId = null;
+      save(PIN_KEY, pins);
+      renderMap();
+    }
+
+    function renderTargets() {
+      const reservedGap = Math.max(Number(target.reservedGoal || 0) - Number(target.reservedDone || 0), 0);
+      const transferGap = Math.max(Number(target.transferredGoal || 0) - Number(target.transferredDone || 0), 0);
+      const reservedPercent = target.reservedGoal ? Math.min((target.reservedDone / target.reservedGoal) * 100, 100) : 0;
+      const transferPercent = target.transferredGoal ? Math.min((target.transferredDone / target.transferredGoal) * 100, 100) : 0;
+      document.getElementById('reservedGap').innerText = reservedGap;
+      document.getElementById('transferGap').innerText = transferGap;
+      document.getElementById('reservedTargetText').innerText = `ทำได้ ${target.reservedDone || 0} / เป้า ${target.reservedGoal || 0}`;
+      document.getElementById('transferTargetText').innerText = `ทำได้ ${target.transferredDone || 0} / เป้า ${target.transferredGoal || 0}`;
+      document.getElementById('reservedProgress').style.width = `${reservedPercent}%`;
+      document.getElementById('transferProgress').style.width = `${transferPercent}%`;
+    }
+
+    function renderAppointments() {
+      const items = [
+        ...leads.map(item => ({ ...item, type: 'Lead' })),
+        ...walkins.map(item => ({ ...item, type: 'Walk-in' }))
+      ].filter(item => isThisWeek(item.followDate || item.nextFollowDate))
+        .sort((a, b) => new Date(a.followDate || a.nextFollowDate) - new Date(b.followDate || b.nextFollowDate));
+      const list = document.getElementById('appointmentList');
+      if (!items.length) {
+        list.innerHTML = '<div class="empty">ยังไม่มีลูกค้าที่ต้องโทรคอนเฟิร์มนัดในสัปดาห์นี้</div>';
+        return;
+      }
+      list.innerHTML = items.map(item => `
+        <div class="appointment-item">
+          <strong>${escapeHtml(item.name)} <span class="pill">${item.type}</span></strong>
+          โทรคอนเฟิร์ม: ${formatThaiDateTime(item.followDate || item.nextFollowDate)}<br>
+          ${escapeHtml(item.phone || '-')} · ${escapeHtml(item.status || item.source || '-')}
+        </div>
+      `).join('');
+    }
+
+    function renderLeads() {
+      const rows = document.getElementById('leadRows');
+      if (!leads.length) {
+        rows.innerHTML = '<tr><td colspan="6" class="section-note">ยังไม่มี Lead</td></tr>';
+      } else {
+        rows.innerHTML = leads.map(lead => `
+          <tr class="${lead.id === selectedLeadId ? 'selected' : ''}" onclick="selectLead('${lead.id}')">
+            <td>${formatDate(lead.date)}</td>
+            <td>${escapeHtml(lead.name)}<br><span class="section-note">${escapeHtml(lead.phone || '')}</span></td>
+            <td>${escapeHtml(lead.channel || lead.source || '-')}</td>
+            <td>${escapeHtml(lead.interest || '-')}</td>
+            <td>${formatThaiDateTime(lead.followDate)}</td>
+            <td><span class="pill">${escapeHtml(lead.status || '-')}</span></td>
+          </tr>
+        `).join('');
+      }
+      renderLeadDetail();
+    }
+
+    function selectLead(id) {
+      selectedLeadId = id;
+      renderLeads();
+    }
+
+    function renderLeadDetail() {
+      const lead = leads.find(item => String(item.id) === String(selectedLeadId));
+      const detail = document.getElementById('leadDetail');
+      document.getElementById('leadDetailTitle').innerText = lead ? lead.name : 'เลือก Lead';
+      if (!lead) {
+        detail.className = 'empty';
+        detail.innerHTML = 'คลิกเลือกลูกค้าจากตาราง Lead';
+        return;
+      }
+      detail.className = '';
+      detail.innerHTML = `
+        <div class="field">
+          <label>ข้อมูล Lead</label>
+          <div class="status-item"><span>${escapeHtml(lead.channel || lead.source || '-')} · ${escapeHtml(lead.interest || '-')}</span><strong>${escapeHtml(lead.status || '-')}</strong></div>
+        </div>
+        <div class="field">
+          <label for="leadFollowText">เพิ่ม Follow up</label>
+          <textarea id="leadFollowText" placeholder="พิมพ์อัปเดตหลัง Follow up..."></textarea>
+        </div>
+        <div class="action-row">
+          <button class="primary" type="button" onclick="addFollowup('lead')">บันทึก Follow up</button>
+          <button type="button" onclick="convertLeadToWalkin()">เปลี่ยนเป็น Walk-in</button>
+          <button class="danger" type="button" onclick="deleteLead()">ลบ Lead</button>
+        </div>
+        <div class="follow-list" style="margin-top: 12px;">${renderFollowups(lead.followups)}</div>
+      `;
+    }
+
+    async function openLeadForm() {
+      const lead = {
+        id: Date.now(),
+        date: today(),
+        name: `Lead ใหม่ ${leads.length + 1}`,
+        phone: '',
+        channel: 'Facebook',
+        interest: 'รอกรอกความสนใจ',
+        status: 'รอติดต่อกลับ',
+        followDate: '',
+        followups: []
+      };
+      if (apiUrl) return runApiMutation('createLead', lead);
+      leads.unshift(lead);
+      selectedLeadId = lead.id;
+      save(LEAD_KEY, leads);
+      renderAll();
+    }
+
+    function convertLeadToWalkin() {
+      const lead = leads.find(item => String(item.id) === String(selectedLeadId));
+      if (!lead) return;
+      showView('walkins');
+      clearWalkinForm();
+      document.getElementById('walkinFormTitle').innerText = `เปลี่ยน Lead เป็น Walk-in: ${lead.name}`;
+      document.getElementById('walkinSourceLeadId').value = lead.id;
+      document.getElementById('customerName').value = lead.name || '';
+      document.getElementById('phone').value = lead.phone || '';
+      document.getElementById('source').value = lead.channel === 'Facebook' ? 'Lead จาก Facebook' : lead.channel === 'Line' ? 'Lead จาก Line' : (lead.source || '');
+      document.getElementById('nextFollowDate').value = lead.followDate || '';
+      document.getElementById('extraDetail').value = `แปลงมาจาก Lead: ${lead.interest || ''}`;
+    }
+
+    async function saveWalkin(event) {
+      event.preventDefault();
+      const sourceLeadId = value('walkinSourceLeadId');
+      const walkin = {
+        id: Date.now(),
+        sourceLeadId,
+        visitTime: value('visitTime'),
+        name: value('customerName'),
+        project: value('projectName'),
+        age: value('age'),
+        phone: value('phone'),
+        source: value('source') || 'Walk-in เอง',
+        visitorCount: value('visitorCount'),
+        residentCount: value('residentCount'),
+        carCount: value('carCount'),
+        homeZone: value('homeZone'),
+        workZone: value('workZone'),
+        route: value('route'),
+        occupation: value('occupation'),
+        occupationType: value('occupationType'),
+        companyName: value('companyName'),
+        personalIncome: value('personalIncome'),
+        familyIncome: value('familyIncome'),
+        budget: value('budget'),
+        houseType: value('houseType'),
+        customerGrade: value('customerGrade'),
+        bookingReason: value('bookingReason'),
+        newHomeReason: value('newHomeReason'),
+        decisionTime: value('decisionTime'),
+        nextFollowDate: value('nextFollowDate'),
+        extraDetail: value('extraDetail'),
+        status: sourceLeadId ? 'แปลงจาก Lead' : 'Walk-in ใหม่',
+        followups: []
+      };
+      if (apiUrl) {
+        await runApiMutation(sourceLeadId ? 'convertLeadToWalkin' : 'createWalkin', walkin);
+        clearWalkinForm();
+        return;
+      }
+      walkins.unshift(walkin);
+      selectedWalkinId = walkin.id;
+      if (sourceLeadId) {
+        const lead = leads.find(item => String(item.id) === String(sourceLeadId));
+        if (lead) {
+          lead.status = 'เป็น Walk-in แล้ว';
+          lead.followups = lead.followups || [];
+          lead.followups.unshift({ at: timestamp(), text: 'เปลี่ยน Lead เป็นลูกค้า Walk-in แล้ว' });
+          save(LEAD_KEY, leads);
+        }
+      }
+      save(WALKIN_KEY, walkins);
+      clearWalkinForm();
+      renderAll();
+    }
+
+    function clearWalkinForm() {
+      document.getElementById('walkinForm').reset();
+      document.getElementById('visitTime').value = '08:00';
+      document.getElementById('walkinSourceLeadId').value = '';
+      document.getElementById('walkinFormTitle').innerText = 'บันทึกลูกค้า Walk-in';
+    }
+
+    function renderWalkins() {
+      const rows = document.getElementById('walkinRows');
+      if (!walkins.length) {
+        rows.innerHTML = '<tr><td colspan="6" class="section-note">ยังไม่มีรายการ Walk-in</td></tr>';
+      } else {
+        rows.innerHTML = walkins.map(walkin => `
+          <tr class="${walkin.id === selectedWalkinId ? 'selected' : ''}" onclick="selectWalkin('${walkin.id}')">
+            <td>${escapeHtml(walkin.visitTime || '-')}</td>
+            <td>${escapeHtml(walkin.name)}<br><span class="section-note">${escapeHtml(walkin.phone || '')}</span></td>
+            <td>${escapeHtml(walkin.project || '-')}</td>
+            <td>${escapeHtml(walkin.source || '-')}</td>
+            <td>${formatThaiDateTime(walkin.nextFollowDate)}</td>
+            <td><span class="pill">${escapeHtml(walkin.status || 'Walk-in')}</span></td>
+          </tr>
+        `).join('');
+      }
+      renderWalkinDetail();
+    }
+
+    function selectWalkin(id) {
+      selectedWalkinId = id;
+      renderWalkins();
+    }
+
+    function renderWalkinDetail() {
+      const walkin = walkins.find(item => String(item.id) === String(selectedWalkinId));
+      const detail = document.getElementById('walkinDetail');
+      document.getElementById('walkinDetailTitle').innerText = walkin ? walkin.name : 'เลือก Walk-in';
+      if (!walkin) {
+        detail.className = 'empty';
+        detail.innerHTML = 'คลิกเลือกลูกค้าจากตาราง Walk-in';
+        return;
+      }
+      detail.className = '';
+      detail.innerHTML = `
+        <div class="field">
+          <label>ข้อมูล Walk-in</label>
+          <div class="status-item"><span>${escapeHtml(walkin.project || '-')}</span><strong>${escapeHtml(walkin.customerGrade || '-')}</strong></div>
+        </div>
+        <div class="field">
+          <label for="walkinFollowText">เพิ่ม Follow up</label>
+          <textarea id="walkinFollowText" placeholder="พิมพ์อัปเดตหลัง Follow up..."></textarea>
+        </div>
+        <div class="action-row">
+          <button class="primary" type="button" onclick="addFollowup('walkin')">บันทึก Follow up</button>
+        </div>
+        <div class="follow-list" style="margin-top: 12px;">${renderFollowups(walkin.followups)}</div>
+      `;
+    }
+
+    async function addFollowup(type) {
+      const isLead = type === 'lead';
+      const textarea = document.getElementById(isLead ? 'leadFollowText' : 'walkinFollowText');
+      const text = textarea.value.trim();
+      if (!text) return;
+      const list = isLead ? leads : walkins;
+      const id = isLead ? selectedLeadId : selectedWalkinId;
+      const item = list.find(entry => String(entry.id) === String(id));
+      if (!item) return;
+      if (apiUrl) return runApiMutation('addFollowup', { type: isLead ? 'lead' : 'walkin', id, text });
+      item.followups = item.followups || [];
+      item.followups.unshift({ at: timestamp(), text });
+      save(isLead ? LEAD_KEY : WALKIN_KEY, list);
+      textarea.value = '';
+      renderAll();
+    }
+
+    async function deleteLead() {
+      const lead = leads.find(item => String(item.id) === String(selectedLeadId));
+      if (!lead) return;
+      if (apiUrl) return runApiMutation('deleteLead', { id: lead.id });
+      leads = leads.filter(item => String(item.id) !== String(lead.id));
+      selectedLeadId = leads.length ? leads[0].id : null;
+      save(LEAD_KEY, leads);
+      renderAll();
+    }
+
+    async function connectApi() {
+      apiUrl = apiUrlInput.value.trim();
+      if (!apiUrl) {
+        localStorage.removeItem(API_URL_KEY);
+        setApiStatus('ยังใช้ข้อมูลทดลองใน browser', '');
+        return;
+      }
+      localStorage.setItem(API_URL_KEY, apiUrl);
+      await syncFromApi();
+    }
+
+    async function syncFromApi() {
+      if (!apiUrl) return;
+      try {
+        setApiStatus('กำลัง sync กับ Google Sheet...', '');
+        const data = await apiRequest('bootstrap', {});
+        applyRemoteData(data);
+        setApiStatus('เชื่อม Google Sheet สำเร็จ', 'ok');
+      } catch (error) {
+        setApiStatus(`เชื่อมไม่ได้: ${error.message}`, 'error');
+      }
+    }
+
+    async function runApiMutation(action, payload) {
+      try {
+        setApiStatus('กำลังบันทึกลง Google Sheet...', '');
+        const data = await apiRequest(action, payload);
+        applyRemoteData(data);
+        setApiStatus('บันทึกลง Google Sheet แล้ว', 'ok');
+      } catch (error) {
+        setApiStatus(`บันทึกไม่ได้: ${error.message}`, 'error');
+      }
+    }
+
+    function apiRequest(action, payload) {
+      return new Promise((resolve, reject) => {
+        const callbackName = `boutikSalesApi_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
+        const script = document.createElement('script');
+        const params = new URLSearchParams({ action, payload: JSON.stringify(payload || {}), callback: callbackName });
+        window[callbackName] = response => {
+          delete window[callbackName];
+          script.remove();
+          if (!response || !response.ok) return reject(new Error(response && response.error ? response.error : 'API error'));
+          resolve(response.data);
+        };
+        script.onerror = () => {
+          delete window[callbackName];
+          script.remove();
+          reject(new Error('โหลด Apps Script ไม่สำเร็จ'));
+        };
+        script.src = `${apiUrl}${apiUrl.includes('?') ? '&' : '?'}${params.toString()}`;
+        document.body.appendChild(script);
+      });
+    }
+
+    function applyRemoteData(data) {
+      leads = (data.leads || []).map(normalizeLeadFromApi);
+      walkins = (data.walkins || []).map(normalizeWalkinFromApi);
+      target = data.kpi || target;
+      selectedLeadId = leads.length ? leads[0].id : null;
+      selectedWalkinId = walkins.length ? walkins[0].id : null;
+      save(LEAD_KEY, leads);
+      save(WALKIN_KEY, walkins);
+      renderAll();
+    }
+
+    function normalizeLeadFromApi(lead) {
+      return { ...lead, followups: Array.isArray(lead.followups) ? lead.followups : [] };
+    }
+
+    function normalizeWalkinFromApi(walkin) {
+      return { ...walkin, followups: Array.isArray(walkin.followups) ? walkin.followups : [] };
+    }
+
+    function renderFollowups(followups = []) {
+      if (!followups.length) return '<div class="empty">ยังไม่มี Follow up</div>';
+      return followups.map(item => `
+        <div class="follow-item">
+          <strong>${escapeHtml(item.at)}</strong>
+          ${escapeHtml(item.text)}
+        </div>
+      `).join('');
+    }
+
+    function isThisWeek(dateValue) {
+      if (!dateValue) return false;
+      const date = new Date(dateValue);
+      if (Number.isNaN(date.getTime())) return false;
+      const base = new Date();
+      const day = base.getDay() || 7;
+      const monday = new Date(base);
+      monday.setDate(base.getDate() - day + 1);
+      monday.setHours(0, 0, 0, 0);
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+      sunday.setHours(23, 59, 59, 999);
+      return date >= monday && date <= sunday;
+    }
+
+    function value(id) {
+      return document.getElementById(id).value.trim();
+    }
+
+    function load(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (error) {
+        return fallback;
+      }
+    }
+
+    function save(key, data) {
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    function setApiStatus(message, state) {
+      apiStatus.innerText = message;
+      apiStatus.className = `api-status ${state || ''}`;
+    }
+
+    function timestamp() {
+      const now = new Date();
+      return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    }
+
+    function today() {
+      const now = new Date();
+      return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    }
+
+    function pad(number) {
+      return String(number).padStart(2, '0');
+    }
+
+    function formatDate(value) {
+      if (!value) return '-';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleDateString('th-TH');
+    }
+
+    function formatThaiDateTime(value) {
+      if (!value) return '-';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '-';
+      return date.toLocaleString('th-TH', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    const initialView = location.hash.replace('#', '') || 'dashboard';
+    showView(['dashboard', 'leads', 'walkins'].includes(initialView) ? initialView : 'dashboard');
+    if (apiUrl) syncFromApi();
+  </script>
+</body>
+</html>
