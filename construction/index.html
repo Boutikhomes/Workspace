@@ -36,6 +36,10 @@ body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+.hidden {
+  display: none !important;
+}
+
 button,
 select,
 textarea {
@@ -139,6 +143,86 @@ textarea {
   margin-bottom: 20px;
 }
 
+.project-picker {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.project-select-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.project-select-card {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  display: grid;
+  overflow: hidden;
+  min-height: 260px;
+  box-shadow: 0 8px 20px rgba(18, 52, 59, 0.06);
+}
+
+.project-select-card:hover,
+.project-select-card.active {
+  border-color: var(--teal);
+  box-shadow: 0 14px 34px rgba(23, 126, 137, 0.16);
+}
+
+.project-photo-slot,
+.dashboard-photo-slot {
+  display: grid;
+  place-items: center;
+  min-height: 150px;
+  border-bottom: 1px solid var(--line);
+  background:
+    linear-gradient(90deg, rgba(23, 126, 137, 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(23, 126, 137, 0.08) 1px, transparent 1px),
+    #edf4f5;
+  background-size: 24px 24px;
+  color: var(--muted);
+  font-weight: 800;
+  text-align: center;
+  padding: 14px;
+}
+
+.project-select-body {
+  padding: 16px;
+}
+
+.project-select-body h3 {
+  margin: 0;
+}
+
+.project-select-body p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.selected-project-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+.dashboard-photo-slot {
+  min-height: 210px;
+  border: 1px dashed #a9bdc0;
+}
+
 .topbar h1,
 .section-head h2 {
   margin: 0;
@@ -156,6 +240,12 @@ textarea {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.lead-copy {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
 }
 
 .top-actions {
@@ -352,6 +442,15 @@ textarea {
   gap: 10px;
 }
 
+.empty {
+  border: 1px dashed #cbd5e1;
+  background: #f8fafc;
+  color: var(--muted);
+  padding: 16px;
+  text-align: center;
+  line-height: 1.55;
+}
+
 .task-meta {
   display: flex;
   flex-wrap: wrap;
@@ -521,6 +620,8 @@ textarea {
   .status-grid,
   .daily-layout,
   .inspection-grid,
+  .project-select-grid,
+  .selected-project-panel,
   .forecast-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -532,6 +633,8 @@ textarea {
   .status-grid,
   .daily-layout,
   .inspection-grid,
+  .project-select-grid,
+  .selected-project-panel,
   .forecast-grid,
   .plan-board {
     grid-template-columns: 1fr;
@@ -586,6 +689,7 @@ textarea {
         <div>
           <p class="eyebrow">ฝ่ายก่อสร้าง</p>
           <h1>ศูนย์ควบคุมงานก่อสร้าง</h1>
+          <p class="lead-copy" id="selectedProjectCopy">เลือกโครงการก่อนเพื่อเปิด dashboard งานก่อสร้าง</p>
         </div>
         <div class="top-actions">
           <button class="icon-button" aria-label="Refresh sync" title="อัปเดตข้อมูล">↻</button>
@@ -593,25 +697,46 @@ textarea {
         </div>
       </header>
 
+      <section class="project-picker" id="projectPicker">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Select Project</p>
+            <h2>เลือกโครงการก่อนเข้าดู Dashboard ก่อสร้าง</h2>
+          </div>
+          <span class="badge">รูปจะลิงก์จากหน้า Workspace Dashboard</span>
+        </div>
+        <div class="project-select-grid" id="projectSelectGrid"></div>
+      </section>
+
+      <div class="dashboard-content hidden" id="dashboardContent">
+        <section class="selected-project-panel">
+          <div>
+            <p class="eyebrow">Current Project</p>
+            <h2 id="selectedProjectName">ยังไม่ได้เลือกโครงการ</h2>
+            <p id="selectedProjectNote">เลือกโครงการจากด้านบนเพื่อดูข้อมูลแผนงาน งานประจำวัน วัสดุ รูปงาน และ forecast ผู้รับเหมา</p>
+          </div>
+          <div class="dashboard-photo-slot" id="selectedProjectPhoto">ช่องรอใส่รูปโครงการจากหน้า Workspace Dashboard</div>
+        </section>
+
       <section class="status-grid" aria-label="ภาพรวมงานก่อสร้าง">
         <article>
           <span>โครงการที่กำลังทำ</span>
-          <strong>3</strong>
-          <small>แยกตามแผนงานก่อสร้าง</small>
+          <strong>1</strong>
+          <small id="statusProjectText">แสดงตามโครงการที่เลือก</small>
         </article>
         <article>
           <span>งานที่ต้องทำวันนี้</span>
-          <strong>18</strong>
-          <small>รวมงานจากทุกฝ่าย</small>
+          <strong id="statusTaskCount">0</strong>
+          <small>รวมงานจากทุกฝ่ายในโครงการนี้</small>
         </article>
         <article>
           <span>วัสดุที่ต้องเรียก</span>
-          <strong>7</strong>
-          <small>ภายใน 14 วัน</small>
+          <strong id="statusMaterialCount">0</strong>
+          <small>รายการที่สัมพันธ์กับแผนงาน</small>
         </article>
         <article>
           <span>ตรวจงานไม่ผ่าน</span>
-          <strong>4</strong>
+          <strong id="statusFailCount">0</strong>
           <small>ต้องแก้ไขก่อนปิดงวด</small>
         </article>
       </section>
@@ -623,10 +748,9 @@ textarea {
             <h2>แผนงานโครงการ</h2>
           </div>
           <div class="segmented" role="tablist" aria-label="Project filters">
-            <button class="active" data-project-filter="all">ทั้งหมด</button>
-            <button data-project-filter="north">โครงการเหนือ</button>
-            <button data-project-filter="east">โครงการตะวันออก</button>
-            <button data-project-filter="west">โครงการตะวันตก</button>
+            <button data-project-filter="samaedam">เวอร์โซ่ แสมดำ</button>
+            <button data-project-filter="valley">เวอร์โซ่ วัลเลย์</button>
+            <button data-project-filter="viaste">เวียสเต้ พระราม 2</button>
           </div>
         </div>
         <div class="plan-board" id="planBoard"></div>
@@ -720,6 +844,7 @@ textarea {
         </div>
         <div class="forecast-grid" id="forecastGrid"></div>
       </section>
+      </div>
     </main>
 
     <dialog id="requestDialog">
@@ -734,9 +859,9 @@ textarea {
         <label>
           โครงการ
           <select>
-            <option>โครงการเหนือ</option>
-            <option>โครงการตะวันออก</option>
-            <option>โครงการตะวันตก</option>
+            <option>โครงการเวอร์โซ่ แสมดำ</option>
+            <option>โครงการเวอร์โซ่ วัลเลย์</option>
+            <option>โครงการเวียสเต้ พระราม 2</option>
           </select>
         </label>
         <label>
@@ -758,11 +883,12 @@ textarea {
     <script>
 const projects = [
   {
-    id: "north",
-    name: "โครงการเหนือ",
+    id: "samaedam",
+    name: "โครงการเวอร์โซ่ แสมดำ",
     status: "ตรงแผน",
     statusClass: "green",
-    note: "โฟกัสงานถนนเมนและบ้านเฟส 1 เพื่อรองรับการโอนจากฝ่ายขาย",
+    imageNote: "รอรูปจากหน้า Workspace Dashboard / Verzo Samaedam",
+    note: "โฟกัสงานสาธารณูปโภคหน้าโครงการและเตรียมบ้านล็อต A สำหรับส่งต่อฝ่ายขาย",
     rows: [
       ["ถนน", 72, "10 มิ.ย."],
       ["เสาไฟฟ้า", 58, "18 มิ.ย."],
@@ -772,10 +898,11 @@ const projects = [
     ],
   },
   {
-    id: "east",
-    name: "โครงการตะวันออก",
+    id: "valley",
+    name: "โครงการเวอร์โซ่ วัลเลย์",
     status: "ขอเร่ง",
     statusClass: "amber",
+    imageNote: "รอรูปจากหน้า Workspace Dashboard / Verzo Valley",
     note: "งานบ้านล็อต B เร็วกว่ากำหนด ต้องขอปรับวันเรียกวัสดุและทีมตรวจงาน",
     rows: [
       ["ถนน", 86, "05 มิ.ย."],
@@ -786,10 +913,11 @@ const projects = [
     ],
   },
   {
-    id: "west",
-    name: "โครงการตะวันตก",
+    id: "viaste",
+    name: "โครงการเวียสเต้ พระราม 2",
     status: "เสี่ยงล่าช้า",
     statusClass: "red",
+    imageNote: "รอรูปจากหน้า Workspace Dashboard / Viaste Rama 2",
     note: "งานสาธารณูปโภคติดฝนและรอวัสดุท่อประปา ต้อง request เลื่อนบางงวด",
     rows: [
       ["ถนน", 45, "16 มิ.ย."],
@@ -803,55 +931,56 @@ const projects = [
 
 const tasks = [
   {
+    projectId: "valley",
     source: "sales",
     sourceLabel: "ฝ่ายขาย",
     title: "เตรียมบ้าน B-18 ก่อนโอนกรรมสิทธิ์",
     detail: "ลูกค้าอยู่ขั้นตอนนัดธนาคาร คาดโอน 12 มิ.ย. 2026 ให้ตรวจ defect และทำความสะอาดบ้าน",
-    project: "โครงการตะวันออก",
     priority: "ด่วน",
     badgeClass: "amber",
   },
   {
+    projectId: "samaedam",
     source: "afterSales",
     sourceLabel: "หลังการขาย",
     title: "เข้าตรวจงานรั่วซึมบ้าน A-07",
     detail: "ลูกค้าแจ้งซ่อมหลังฝนตก ให้ทีมช่างเข้าตรวจและอัปเดตรูปใน Drive รายแปลง",
-    project: "โครงการเหนือ",
     priority: "วันนี้",
     badgeClass: "red",
   },
   {
+    projectId: "samaedam",
     source: "marketing",
     sourceLabel: "การตลาด",
     title: "เตรียมพื้นที่ถ่ายทำคอนเทนต์",
     detail: "เคลียร์พื้นที่สวนส่วนกลาง ติดไฟชั่วคราว และกั้นแนวปลอดภัยก่อนทีมถ่ายทำเข้า",
-    project: "โครงการเหนือ",
     priority: "พรุ่งนี้",
     badgeClass: "green",
   },
   {
+    projectId: "viaste",
     source: "ceo",
     sourceLabel: "CEO",
     title: "ตรวจความเรียบร้อยถนนทางเข้า",
     detail: "เพิ่มเป็นงานทั่วไปเพื่อเตรียมรับผู้บริหารและคู่ค้าเยี่ยมชมไซต์",
-    project: "โครงการตะวันตก",
     priority: "สัปดาห์นี้",
     badgeClass: "amber",
   },
 ];
 
 const materials = [
-  ["โครงการเหนือ", "ถนน", "คอนกรีตผสมเสร็จ 240 ksc", "03 มิ.ย. 2026", "ก่อนเทถนนเมน 7 วัน", "รออนุมัติ"],
-  ["โครงการเหนือ", "เสาไฟฟ้า", "เสาไฟ 8 เมตร / ตู้ MDB", "06 มิ.ย. 2026", "ก่อนเดินระบบไฟ 10 วัน", "เรียกแล้ว"],
-  ["โครงการตะวันออก", "บ้าน", "กระเบื้องพื้นล็อต B", "08 มิ.ย. 2026", "ก่อนปูกระเบื้อง 5 วัน", "ต้องเร่ง"],
-  ["โครงการตะวันตก", "ประปา", "ท่อ HDPE และวาล์ว", "12 มิ.ย. 2026", "ก่อนวางระบบประปา 14 วัน", "ขาดเอกสาร"],
-  ["โครงการตะวันตก", "ทางเท้า", "บล็อกปูพื้น", "20 มิ.ย. 2026", "หลังงานประปาผ่านตรวจ", "ตามแผน"],
+  { projectId: "samaedam", project: "โครงการเวอร์โซ่ แสมดำ", category: "ถนน", item: "คอนกรีตผสมเสร็จ 240 ksc", date: "03 มิ.ย. 2026", link: "ก่อนเทถนนเมน 7 วัน", status: "รออนุมัติ" },
+  { projectId: "samaedam", project: "โครงการเวอร์โซ่ แสมดำ", category: "เสาไฟฟ้า", item: "เสาไฟ 8 เมตร / ตู้ MDB", date: "06 มิ.ย. 2026", link: "ก่อนเดินระบบไฟ 10 วัน", status: "เรียกแล้ว" },
+  { projectId: "valley", project: "โครงการเวอร์โซ่ วัลเลย์", category: "บ้าน", item: "กระเบื้องพื้นล็อต B", date: "08 มิ.ย. 2026", link: "ก่อนปูกระเบื้อง 5 วัน", status: "ต้องเร่ง" },
+  { projectId: "viaste", project: "โครงการเวียสเต้ พระราม 2", category: "ประปา", item: "ท่อ HDPE และวาล์ว", date: "12 มิ.ย. 2026", link: "ก่อนวางระบบประปา 14 วัน", status: "ขาดเอกสาร" },
+  { projectId: "viaste", project: "โครงการเวียสเต้ พระราม 2", category: "ทางเท้า", item: "บล็อกปูพื้น", date: "20 มิ.ย. 2026", link: "หลังงานประปาผ่านตรวจ", status: "ตามแผน" },
 ];
 
 const inspections = [
   {
+    projectId: "samaedam",
     plot: "A-07",
-    drive: "Drive / โครงการเหนือ / A-07 / แจ้งซ่อม",
+    drive: "Drive / Verzo Samaedam / A-07 / แจ้งซ่อม",
     jobs: [
       ["โครงสร้าง", true],
       ["หลังคา", false],
@@ -859,8 +988,9 @@ const inspections = [
     ],
   },
   {
+    projectId: "valley",
     plot: "B-18",
-    drive: "Drive / โครงการตะวันออก / B-18 / ก่อนโอน",
+    drive: "Drive / Verzo Valley / B-18 / ก่อนโอน",
     jobs: [
       ["สีและเก็บงาน", true],
       ["ไฟฟ้า", true],
@@ -868,8 +998,9 @@ const inspections = [
     ],
   },
   {
+    projectId: "viaste",
     plot: "C-14",
-    drive: "Drive / โครงการตะวันตก / C-14 / ประกันปี",
+    drive: "Drive / Viaste Rama 2 / C-14 / ประกันปี",
     jobs: [
       ["ประตูหน้าต่าง", false],
       ["งานสวน", true],
@@ -879,10 +1010,12 @@ const inspections = [
 ];
 
 const forecasts = [
-  ["มิ.ย.", "฿4.8M", 72, "งานถนน บ้านล็อต B และประปา"],
-  ["ก.ค.", "฿5.6M", 64, "งานโครงสร้าง บ้านเฟส 2"],
-  ["ส.ค.", "฿3.9M", 48, "ทางเท้า งานไฟฟ้า และเก็บ defect"],
-  ["ก.ย.", "฿4.2M", 55, "จ่ายงวดผู้รับเหมาหลักและงานส่วนกลาง"],
+  { projectId: "samaedam", month: "มิ.ย.", amount: "฿4.8M", progress: 72, detail: "งานถนน บ้านล็อต A และประปา" },
+  { projectId: "samaedam", month: "ก.ค.", amount: "฿5.1M", progress: 64, detail: "งานโครงสร้าง บ้านเฟส 2" },
+  { projectId: "valley", month: "มิ.ย.", amount: "฿5.6M", progress: 78, detail: "เร่งจ่ายงานบ้านล็อต B และเก็บ defect" },
+  { projectId: "valley", month: "ก.ค.", amount: "฿3.9M", progress: 48, detail: "งานทางเท้าและระบบไฟฟ้า" },
+  { projectId: "viaste", month: "มิ.ย.", amount: "฿4.2M", progress: 55, detail: "จ่ายงวดผู้รับเหมาหลักและงานส่วนกลาง" },
+  { projectId: "viaste", month: "ก.ค.", amount: "฿3.7M", progress: 44, detail: "งานประปา ถนน และตรวจแก้งาน" },
 ];
 
 const planBoard = document.querySelector("#planBoard");
@@ -892,10 +1025,70 @@ const inspectionGrid = document.querySelector("#inspectionGrid");
 const forecastGrid = document.querySelector("#forecastGrid");
 const sourceFilter = document.querySelector("#sourceFilter");
 const requestDialog = document.querySelector("#requestDialog");
+const projectPicker = document.querySelector("#projectPicker");
+const projectSelectGrid = document.querySelector("#projectSelectGrid");
+const dashboardContent = document.querySelector("#dashboardContent");
+const selectedProjectName = document.querySelector("#selectedProjectName");
+const selectedProjectNote = document.querySelector("#selectedProjectNote");
+const selectedProjectPhoto = document.querySelector("#selectedProjectPhoto");
+const selectedProjectCopy = document.querySelector("#selectedProjectCopy");
+const statusProjectText = document.querySelector("#statusProjectText");
+const statusTaskCount = document.querySelector("#statusTaskCount");
+const statusMaterialCount = document.querySelector("#statusMaterialCount");
+const statusFailCount = document.querySelector("#statusFailCount");
 
-function renderPlans(filter = "all") {
+let currentProjectId = null;
+
+function projectName(projectId) {
+  return projects.find((project) => project.id === projectId)?.name || "";
+}
+
+function projectFiltered(items) {
+  return items.filter((item) => item.projectId === currentProjectId);
+}
+
+function renderProjectPicker() {
+  projectSelectGrid.innerHTML = projects
+    .map(
+      (project) => `
+        <button class="project-select-card ${project.id === currentProjectId ? "active" : ""}" type="button" data-select-project="${project.id}">
+          <div class="project-photo-slot">${project.imageNote}</div>
+          <div class="project-select-body">
+            <h3>${project.name}</h3>
+            <p>${project.note}</p>
+          </div>
+        </button>
+      `,
+    )
+    .join("");
+
+  document.querySelectorAll("[data-select-project]").forEach((button) => {
+    button.addEventListener("click", () => selectProject(button.dataset.selectProject));
+  });
+}
+
+function selectProject(projectId) {
+  currentProjectId = projectId;
+  const project = projects.find((item) => item.id === projectId);
+  projectPicker.classList.add("hidden");
+  dashboardContent.classList.remove("hidden");
+  selectedProjectName.textContent = project.name;
+  selectedProjectNote.textContent = project.note;
+  selectedProjectPhoto.textContent = project.imageNote;
+  selectedProjectCopy.textContent = project.name;
+  statusProjectText.textContent = project.name;
+
+  document.querySelectorAll("[data-project-filter]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.projectFilter === projectId);
+  });
+
+  renderProjectPicker();
+  renderDashboard();
+}
+
+function renderPlans() {
   planBoard.innerHTML = projects
-    .filter((project) => filter === "all" || project.id === filter)
+    .filter((project) => project.id === currentProjectId)
     .map(
       (project) => `
         <article class="plan-card">
@@ -925,9 +1118,13 @@ function renderPlans(filter = "all") {
     .join("");
 }
 
-function renderTasks(filter = "all") {
-  taskList.innerHTML = tasks
-    .filter((task) => filter === "all" || task.source === filter)
+function renderTasks(source = "all") {
+  const filtered = tasks
+    .filter((task) => task.projectId === currentProjectId)
+    .filter((task) => source === "all" || task.source === source);
+
+  taskList.innerHTML = filtered.length
+    ? filtered
     .map(
       (task) => `
         <article class="task-card">
@@ -940,18 +1137,19 @@ function renderTasks(filter = "all") {
           </div>
           <div class="task-meta">
             <span class="badge">${task.sourceLabel}</span>
-            <span class="badge">${task.project}</span>
+            <span class="badge">${projectName(task.projectId)}</span>
           </div>
         </article>
       `,
     )
-    .join("");
+    .join("")
+    : `<div class="empty">ยังไม่มีงานจากฝ่ายนี้ในโครงการที่เลือก</div>`;
 }
 
 function renderMaterials() {
-  materialRows.innerHTML = materials
+  materialRows.innerHTML = projectFiltered(materials)
     .map(
-      ([project, category, item, date, link, status]) => `
+      ({ project, category, item, date, link, status }) => `
         <tr>
           <td>${project}</td>
           <td>${category}</td>
@@ -966,7 +1164,7 @@ function renderMaterials() {
 }
 
 function renderInspections() {
-  inspectionGrid.innerHTML = inspections
+  inspectionGrid.innerHTML = projectFiltered(inspections)
     .map(
       (inspection) => `
         <article class="inspection-card">
@@ -999,9 +1197,9 @@ function renderInspections() {
 }
 
 function renderForecasts() {
-  forecastGrid.innerHTML = forecasts
+  forecastGrid.innerHTML = projectFiltered(forecasts)
     .map(
-      ([month, amount, progress, detail]) => `
+      ({ month, amount, progress, detail }) => `
         <article class="forecast-card">
           <div class="forecast-title">
             <h3>${month}</h3>
@@ -1016,11 +1214,31 @@ function renderForecasts() {
     .join("");
 }
 
+function renderSummary() {
+  const projectTasks = projectFiltered(tasks);
+  const projectMaterials = projectFiltered(materials);
+  const failedJobs = projectFiltered(inspections).reduce(
+    (total, inspection) => total + inspection.jobs.filter(([, passed]) => !passed).length,
+    0,
+  );
+
+  statusTaskCount.textContent = projectTasks.length;
+  statusMaterialCount.textContent = projectMaterials.length;
+  statusFailCount.textContent = failedJobs;
+}
+
+function renderDashboard() {
+  renderPlans();
+  renderTasks(sourceFilter.value);
+  renderMaterials();
+  renderInspections();
+  renderForecasts();
+  renderSummary();
+}
+
 document.querySelectorAll("[data-project-filter]").forEach((button) => {
   button.addEventListener("click", () => {
-    document.querySelectorAll("[data-project-filter]").forEach((item) => item.classList.remove("active"));
-    button.classList.add("active");
-    renderPlans(button.dataset.projectFilter);
+    selectProject(button.dataset.projectFilter);
   });
 });
 
@@ -1032,11 +1250,7 @@ document.querySelector("#openRequest").addEventListener("click", () => {
   requestDialog.showModal();
 });
 
-renderPlans();
-renderTasks();
-renderMaterials();
-renderInspections();
-renderForecasts();
+renderProjectPicker();
 
 </script>
   </body>
